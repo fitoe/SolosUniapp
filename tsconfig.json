@@ -1,0 +1,35 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "lib": ["esnext", "dom"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": [
+      "@dcloudio/types",
+      "@uni-helper/uni-app-types",
+      "@uni-helper/vite-plugin-uni-pages",
+      "@uni-helper/vite-plugin-uni-layouts",
+      "pinia-plugin-persist-uni",
+      "@vue/runtime-core"
+    ],
+    "allowImportingTsExtensions": true,
+    "allowJs": true,
+    "sourceMap": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "config/**/*.ts",
+    "scripts/**/*.ts",
+    "./auto-imports.d.ts",
+    "vite.config.ts",
+    "pages.config.ts",
+    "manifest.config.ts",
+    "uno.config.ts"
+  ],
+  "vueCompilerOptions": {}
+}

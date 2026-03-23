@@ -1,0 +1,50 @@
+{
+  "name": "uniapp-starter-v1",
+  "type": "module",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "predev:h5": "node ./scripts/validate-env.mjs",
+    "predev:mp-weixin": "node ./scripts/validate-env.mjs",
+    "predev:mp-toutiao": "node ./scripts/validate-env.mjs",
+    "predev:mp-kuaishou": "node ./scripts/validate-env.mjs",
+    "predev:mp-xhs": "node ./scripts/validate-env.mjs",
+    "prebuild:h5": "node ./scripts/validate-env.mjs",
+    "prebuild:mp-weixin": "node ./scripts/validate-env.mjs",
+    "prebuild:mp-toutiao": "node ./scripts/validate-env.mjs",
+    "prebuild:mp-kuaishou": "node ./scripts/validate-env.mjs",
+    "prebuild:mp-xhs": "node ./scripts/validate-env.mjs",
+    "dev:h5": "uni",
+    "dev:mp-weixin": "uni -m wechat -p mp-weixin",
+    "dev:mp-toutiao": "uni -m wechat -p mp-toutiao",
+    "dev:mp-kuaishou": "uni -m wechat -p mp-kuaishou",
+    "dev:mp-xhs": "uni -m wechat -p mp-xhs",
+    "build:h5": "uni build",
+    "build:mp-weixin": "uni build -m wechatproduction -p mp-weixin",
+    "build:mp-toutiao": "uni build -m wechatproduction -p mp-toutiao",
+    "build:mp-kuaishou": "uni build -m wechatproduction -p mp-kuaishou",
+    "build:mp-xhs": "uni build -m wechatproduction -p mp-xhs",
+    "build:all-mini": "pnpm build:mp-weixin && pnpm build:mp-toutiao && pnpm build:mp-kuaishou && pnpm build:mp-xhs",
+    "smoke:build-mini": "node ./scripts/check-build-outputs.mjs",
+    "test": "pnpm test:unit && pnpm test:e2e",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "upload:all": "node ./scripts/upload-all.mjs",
+    "upload:douyin": "node ./scripts/upload-douyin.mjs",
+    "upload:kuaishou": "node ./scripts/upload-kuaishou.mjs",
+    "upload:mp": "node ./scripts/upload-weixin.mjs --target=weixin",
+    "upload:xhs": "node ./scripts/upload-xhs.mjs",
+    "type-check": "vue-tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "starter_contract": {
+    "ui_library": "uni-ui",
+    "request_library": "alova",
+    "features": [
+      "auth",
+      "chart"
+    ]
+  }
+}

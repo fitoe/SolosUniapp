@@ -1,0 +1,98 @@
+name: Mini Build Matrix
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-mini-target:
+    name: Build ${{ matrix.target }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: mp-weixin
+            cmd: pnpm build:mp-weixin
+          - target: mp-toutiao
+            cmd: pnpm build:mp-toutiao
+          - target: mp-kuaishou
+            cmd: pnpm build:mp-kuaishou
+          - target: mp-xhs
+            cmd: pnpm build:mp-xhs
+    env:
+      VITE_API_HOST: ${{ secrets.VITE_API_HOST }}
+      VITE_API_PATH: ${{ secrets.VITE_API_PATH }}
+      VITE_UPLOAD_HOST: ${{ secrets.VITE_UPLOAD_HOST }}
+      VITE_UPLOAD_PATH: ${{ secrets.VITE_UPLOAD_PATH }}
+      VITE_APPID_WEIXIN: ${{ secrets.VITE_APPID_WEIXIN }}
+      VITE_PROJECT_NAME_WEIXIN: ${{ secrets.VITE_PROJECT_NAME_WEIXIN }}
+      VITE_APPID_TOUTIAO: ${{ secrets.VITE_APPID_TOUTIAO }}
+      VITE_PROJECT_NAME_TOUTIAO: ${{ secrets.VITE_PROJECT_NAME_TOUTIAO }}
+      VITE_APPID_KUAISHOU: ${{ secrets.VITE_APPID_KUAISHOU }}
+      VITE_PROJECT_NAME_KUAISHOU: ${{ secrets.VITE_PROJECT_NAME_KUAISHOU }}
+      VITE_APPID_XHS: ${{ secrets.VITE_APPID_XHS }}
+      VITE_PROJECT_NAME_XHS: ${{ secrets.VITE_PROJECT_NAME_XHS }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.10.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm type-check
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build target
+        run: ${{ matrix.cmd }}
+
+      - name: Upload target artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.target }}
+          path: dist/build/
+          if-no-files-found: error
+
+  smoke-check:
+    name: Smoke Build Outputs
+    runs-on: ubuntu-latest
+    needs: build-mini-target
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist/build
+
+      - name: Normalize artifact directories
+        run: |
+          mkdir -p dist/build
+          for d in dist/build/dist-*; do
+            if [ -d "$d" ]; then
+              target="${d#dist/build/dist-}"
+              mkdir -p "dist/build/$target"
+              cp -R "$d"/* "dist/build/$target/" || true
+            fi
+          done
+
+      - name: Smoke check build outputs
+        run: node ./scripts/check-build-outputs.mjs

@@ -1,0 +1,68 @@
+name: Upload All Mini Programs
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Upload version, default package.json version
+        required: false
+        type: string
+      desc:
+        description: Upload description, default latest git commit
+        required: false
+        type: string
+      robot:
+        description: Weixin robot id (1-30)
+        required: false
+        default: '1'
+        type: string
+
+jobs:
+  upload-all:
+    runs-on: ubuntu-latest
+    env:
+      VITE_API_HOST: ${{ secrets.VITE_API_HOST }}
+      VITE_API_PATH: ${{ secrets.VITE_API_PATH }}
+      VITE_UPLOAD_HOST: ${{ secrets.VITE_UPLOAD_HOST }}
+      VITE_UPLOAD_PATH: ${{ secrets.VITE_UPLOAD_PATH }}
+      VITE_APPID_WEIXIN: ${{ secrets.VITE_APPID_WEIXIN }}
+      VITE_PROJECT_NAME_WEIXIN: ${{ secrets.VITE_PROJECT_NAME_WEIXIN }}
+      VITE_APPID_TOUTIAO: ${{ secrets.VITE_APPID_TOUTIAO }}
+      VITE_PROJECT_NAME_TOUTIAO: ${{ secrets.VITE_PROJECT_NAME_TOUTIAO }}
+      VITE_APPID_KUAISHOU: ${{ secrets.VITE_APPID_KUAISHOU }}
+      VITE_PROJECT_NAME_KUAISHOU: ${{ secrets.VITE_PROJECT_NAME_KUAISHOU }}
+      VITE_APPID_XHS: ${{ secrets.VITE_APPID_XHS }}
+      VITE_PROJECT_NAME_XHS: ${{ secrets.VITE_PROJECT_NAME_XHS }}
+      WX_PRIVATE_KEY_WEIXIN_BASE64: ${{ secrets.WX_PRIVATE_KEY_WEIXIN_BASE64 }}
+      KS_PRIVATE_KEY_BASE64: ${{ secrets.KS_PRIVATE_KEY_BASE64 }}
+      DOUYIN_TOKEN: ${{ secrets.DOUYIN_TOKEN }}
+      XHS_TOKEN: ${{ secrets.XHS_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.10.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Upload all mini programs
+        shell: bash
+        run: |
+          ARGS="--robot=${{ github.event.inputs.robot }}"
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            ARGS="$ARGS --version=${{ github.event.inputs.version }}"
+          fi
+          if [ -n "${{ github.event.inputs.desc }}" ]; then
+            ARGS="$ARGS --desc=${{ github.event.inputs.desc }}"
+          fi
+          node ./scripts/upload-all.mjs $ARGS

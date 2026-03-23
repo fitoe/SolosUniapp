@@ -1,0 +1,121 @@
+{
+  "project": {
+    "name": "uniapp-starter-v1",
+    "type": "starter-template",
+    "status": "ready",
+    "stack": ["uni-app", "vue3", "typescript", "vite", "uni-helper", "unocss"],
+    "constraints": {
+      "ui_library": "uni-ui",
+      "request_library": "alova",
+      "features_enabled": ["auth", "chart"]
+    }
+  },
+  "platforms": ["h5", "mp-weixin", "mp-toutiao", "mp-kuaishou", "mp-xhs"],
+  "entrypoints": {
+    "app": "src/main.ts",
+    "vite": "vite.config.ts",
+    "pages": "pages.config.ts",
+    "manifest": "manifest.config.ts",
+    "targets": "config/targets.ts"
+  },
+  "modules": {
+    "auth": [
+      "src/core/auth/constants.ts",
+      "src/core/auth/store.ts",
+      "src/core/auth/guard.ts"
+    ],
+    "request": [
+      "src/core/request/alova.ts",
+      "src/core/request/http.ts"
+    ],
+    "chart": [
+      "src/pages/chart/index.vue",
+      "src/components/qiun-data-charts/qiun-data-charts.vue"
+    ],
+    "upload": [
+      "scripts/upload-weixin.mjs",
+      "scripts/upload-douyin.mjs",
+      "scripts/upload-kuaishou.mjs",
+      "scripts/upload-xhs.mjs",
+      "scripts/upload-all.mjs"
+    ]
+  },
+  "commands": {
+    "install": "pnpm i",
+    "clean": "pnpm clean",
+    "release_check": "pnpm release:check",
+    "check": ["pnpm type-check", "pnpm lint"],
+    "test": ["pnpm test:unit", "pnpm test:e2e"],
+    "dev": [
+      "pnpm dev:h5",
+      "pnpm dev:mp-weixin",
+      "pnpm dev:mp-toutiao",
+      "pnpm dev:mp-kuaishou",
+      "pnpm dev:mp-xhs"
+    ],
+    "build": ["pnpm build:h5", "pnpm build:all-mini", "pnpm smoke:build-mini"],
+    "upload": [
+      "pnpm upload:mp",
+      "pnpm upload:douyin",
+      "pnpm upload:kuaishou",
+      "pnpm upload:xhs",
+      "pnpm upload:all"
+    ]
+  },
+  "env": {
+    "examples": ["env/.env.example", "env/.env.wechat.example"],
+    "required_base": [
+      "VITE_API_HOST",
+      "VITE_API_PATH",
+      "VITE_UPLOAD_HOST",
+      "VITE_UPLOAD_PATH"
+    ],
+    "required_platform": [
+      "VITE_APPID_WEIXIN",
+      "VITE_PROJECT_NAME_WEIXIN",
+      "VITE_APPID_TOUTIAO",
+      "VITE_PROJECT_NAME_TOUTIAO",
+      "VITE_APPID_KUAISHOU",
+      "VITE_PROJECT_NAME_KUAISHOU",
+      "VITE_APPID_XHS",
+      "VITE_PROJECT_NAME_XHS"
+    ],
+    "required_upload_secrets": {
+      "weixin": [
+        "WX_PRIVATE_KEY_PATH_WEIXIN",
+        "WX_PRIVATE_KEY_WEIXIN_BASE64",
+        "WX_PRIVATE_KEY_WEIXIN"
+      ],
+      "douyin": ["DOUYIN_TOKEN"],
+      "kuaishou": ["KS_PRIVATE_KEY_PATH", "KS_PRIVATE_KEY_BASE64", "KS_PRIVATE_KEY"],
+      "xhs": ["XHS_TOKEN"]
+    }
+  },
+  "ci": {
+    "workflows": [
+      ".github/workflows/mini-build.yml",
+      ".github/workflows/upload-weixin.yml",
+      ".github/workflows/upload-all-mini.yml"
+    ]
+  },
+  "bootstrap_steps": [
+    "Read AGENTS.md",
+    "Read README.md",
+    "Read TESTING_POLICY.md",
+    "Install dependencies",
+    "Run type-check",
+    "Run lint"
+  ],
+  "testing_policy": {
+    "unit_framework": "vitest",
+    "e2e_framework": "playwright",
+    "mandatory": true,
+    "rules": [
+      "Every component/page change must include tests",
+      "Component changes require unit tests",
+      "Page changes require unit + e2e tests"
+    ],
+    "files": ["TESTING_POLICY.md", "vitest.config.ts", "playwright.config.ts"]
+  },
+  "last_updated": "2026-03-23"
+}

@@ -1,0 +1,7 @@
+{
+  "i18n-ally.localesPaths": [
+    "unibest-ref/packages/cli/features/i18n",
+    "unibest-ref/packages/cli/features/i18n/files/src/locale",
+    "unibest-ref/packages/cli/features/i18n/files/src/pages/i18n"
+  ]
+}
