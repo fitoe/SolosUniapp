@@ -17,7 +17,7 @@ function resolveTargetConfig(target, env) {
   if (target === 'weixin') {
     return {
       appid: env.VITE_APPID_WEIXIN,
-      projectName: env.VITE_PROJECT_NAME_WEIXIN || 'weixin-project',
+      projectName: env.VITE_PROJECT_NAME_WEIXIN || 'mini-program',
       buildCmd: 'pnpm build:mp-weixin',
       projectPath: path.resolve(ROOT_DIR, 'dist', 'build', 'mp-weixin'),
       privateKeyPathEnv: env.WX_PRIVATE_KEY_PATH_WEIXIN,
@@ -104,7 +104,7 @@ async function main() {
   console.log(`[upload] version: ${version}`)
   console.log(`[upload] desc: ${desc}`)
   console.log(`[upload] robot: ${args.robot}`)
-  console.log(`[upload] private key: ${privateKeyPath}`)
+  console.log('[upload] private key: resolved')
 
   console.log('\n[upload] building...')
   execSync(config.buildCmd, { cwd: ROOT_DIR, stdio: 'inherit' })

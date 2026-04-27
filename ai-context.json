@@ -1,6 +1,6 @@
 {
   "project": {
-    "name": "uniapp-starter-v1",
+    "name": "SolosUniapp",
     "type": "starter-template",
     "status": "ready",
     "stack": ["uni-app", "vue3", "typescript", "vite", "uni-helper", "unocss"],
@@ -24,13 +24,14 @@
       "src/core/request/http.ts"
     ],
     "upload": [
-      "scripts/upload-weixin.mjs"
+      "scripts/upload-weixin.mjs",
+      "scripts/upload-all.mjs"
     ]
   },
   "commands": {
     "install": "pnpm i",
     "check": ["pnpm type-check", "pnpm lint"],
-    "test": ["pnpm test:unit", "pnpm test:e2e"],
+    "test": ["pnpm test:unit", "pnpm test:e2e", "pnpm test:mp:smoke"],
     "dev": [
       "pnpm dev:h5",
       "pnpm dev:mp-weixin"
@@ -53,7 +54,25 @@
         "Use scripts/wechat-devtools-enable.mjs on Windows",
         "Use node ./scripts/wechat-devtools.mjs inspect for page stack and current page",
         "Use node ./scripts/wechat-devtools.mjs screenshot for screenshots",
+        "Use pnpm test:mp:smoke for mp-weixin smoke validation after the project is connected",
         "If connection fails, tell user to verify DevTools opened dist/dev/mp-weixin and enabled the service port in security settings"
+      ]
+    },
+    "shell_preference": {
+      "windows_default": "git-bash-preferred",
+      "git_bash_path": "C:\\Program Files\\Git\\bin\\bash.exe",
+      "fallback_env": "GIT_BASH_PATH",
+      "use_git_bash_for": [
+        "commands containing && or ||",
+        "inline environment variable assignment",
+        "pipes, globbing, redirection, and .sh scripts",
+        "multi-step shell workflows better expressed in POSIX shell"
+      ],
+      "keep_powershell_for": [
+        "Get-ChildItem",
+        "Get-Process",
+        "Get-NetTCPConnection",
+        "other Windows-native inspection commands"
       ]
     }
   },

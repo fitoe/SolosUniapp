@@ -1,9 +1,8 @@
-import { resolve } from 'node:path'
-import process from 'node:process'
-import Uni from '@dcloudio/vite-plugin-uni'
+import { fileURLToPath, URL } from 'node:url'
+import Uni from '@uni-helper/plugin-uni'
+import { uniuseAutoImports } from '@uni-helper/uni-use'
 import Components from '@uni-helper/vite-plugin-uni-components'
 import { WotResolver } from '@uni-helper/vite-plugin-uni-components/resolvers'
-import UniLayouts from '@uni-helper/vite-plugin-uni-layouts'
 import UniManifest from '@uni-helper/vite-plugin-uni-manifest'
 import UniPages from '@uni-helper/vite-plugin-uni-pages'
 import UnoCSS from 'unocss/vite'
@@ -11,21 +10,37 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { defineConfig, loadEnv } from 'vite'
 import uniPolyfill from 'vite-plugin-uni-polyfill'
 
+function toVitePath(url: string) {
+  return fileURLToPath(new URL(url, import.meta.url)).replace(/\\/g, '/')
+}
+
 export default ({ mode }: { mode: string }) => {
-  const env = loadEnv(mode, process.cwd())
-  const isH5Dev = process.env.UNI_PLATFORM === 'h5' && process.env.NODE_ENV === 'development'
-  const uniMaybe = Uni as unknown as (() => unknown) | { default: () => unknown }
-  const createUniPlugin: () => any = typeof uniMaybe === 'function' ? uniMaybe : uniMaybe.default
+  const envDir = toVitePath('./env')
+  const srcDir = toVitePath('./src')
+  const wotDir = toVitePath('./node_modules/wot-design-uni')
+  const env = {
+    ...loadEnv(mode, envDir),
+    ...loadEnv('wechat', envDir),
+  }
+  const uniUseImports = Object.fromEntries(
+    Object.entries(uniuseAutoImports()).map(([pkg, imports]) => [
+      pkg,
+      imports.filter(name => name !== 'useRequest'),
+    ]),
+  )
   return defineConfig({
+    envDir,
     resolve: {
       alias: {
-        '~/': `${resolve(__dirname, 'src')}/`,
-        '@/': `${resolve(__dirname, 'src')}/`,
+        '~/': `${srcDir}/`,
+        '@/': `${srcDir}/`,
+        'wot-design-uni': wotDir,
       },
     },
     server: {
       host: '0.0.0.0',
-      port: 3000,
+      port: 3500,
+      strictPort: true,
       proxy: {
         '/api': {
           target: env.VITE_API_HOST,
@@ -40,7 +55,7 @@ export default ({ mode }: { mode: string }) => {
       },
     },
     optimizeDeps: {
-      exclude: isH5Dev ? ['vue-demi', 'wot-design-uni'] : ['vue-demi'],
+      exclude: ['vue-demi'],
     },
     publicDir: 'public',
     build: {
@@ -54,31 +69,37 @@ export default ({ mode }: { mode: string }) => {
       },
     },
     plugins: [
-      uniPolyfill(),
       UniManifest(),
       UniPages({
-        homePage: 'pages/index',
-        subPackages: ['src/subpages'],
+        dts: 'src/uni-pages.d.ts',
       }),
-      UniLayouts(),
-      UnoCSS(),
+      Components({
+        dts: false,
+        directoryAsNamespace: false,
+        resolvers: [WotResolver()],
+      }),
+      Uni(),
+      uniPolyfill(),
       AutoImport({
         imports: [
           'vue',
           'uni-app',
+          uniUseImports,
           'pinia',
-          { 'alova/client': ['useRequest', 'usePagination', 'useAutoRequest', 'useWatcher'] },
+          {
+            'alova/client': [
+              'useRequest',
+            ],
+          },
         ],
         dts: true,
-        dirs: ['src/composables', 'src/stores', 'src/core'],
+        dirsScanOptions: {
+          types: true,
+        },
+        dirs: ['src/composables', 'src/composables/**', 'src/stores', 'src/stores/**', 'src/core', 'src/core/**'],
         vueTemplate: true,
       }),
-      Components({
-        dts: 'src/components.d.ts',
-        directoryAsNamespace: false,
-        resolvers: [WotResolver()],
-      }),
-      createUniPlugin(),
+      UnoCSS(),
     ],
   })
 }

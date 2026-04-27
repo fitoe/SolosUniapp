@@ -1,27 +1,63 @@
 import { mount } from '@vue/test-utils'
+import { createPinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import IndexPage from '@/pages/index.vue'
+import { useHomePlaygroundStore } from '@/stores/home-playground'
+
+function mountIndexPage() {
+  const pinia = createPinia()
+  const wrapper = mount(IndexPage, {
+    global: {
+      plugins: [pinia],
+      stubs: {
+        'wd-button': {
+          emits: ['click'],
+          template: '<button @click="$emit(\'click\')"><slot /></button>',
+        },
+        'wd-tag': {
+          template: '<span><slot /></span>',
+        },
+      },
+    },
+  })
+
+  return {
+    wrapper,
+    store: useHomePlaygroundStore(pinia),
+  }
+}
 
 describe('pages/index.vue', () => {
   beforeEach(() => {
     vi.mocked(uni.navigateTo).mockClear()
   })
 
-  it('renders a single basic home page', () => {
-    const wrapper = mount(IndexPage)
+  it('renders the smoke playground sections', () => {
+    const { wrapper } = mountIndexPage()
 
-    expect(wrapper.text()).toContain('基础首页')
-    expect(wrapper.text()).toContain('只保留一个基础首页用于 H5 与微信小程序开发。')
-    expect(wrapper.text()).not.toContain('登录鉴权')
-    expect(wrapper.text()).not.toContain('图表页')
-    expect(wrapper.text()).not.toContain('我的')
+    expect(wrapper.text()).toContain('SolosUniapp 能力面板')
+    expect(wrapper.text()).toContain('UnoCSS 样式验证')
+    expect(wrapper.text()).toContain('Iconify 图标验证')
+    expect(wrapper.text()).toContain('Pinia 状态验证')
+    expect(wrapper.text()).toContain('Wot 组件验证')
+    expect(wrapper.text()).toContain('当前计数')
+    expect(wrapper.text()).toContain('2')
+    expect(wrapper.text()).toContain('已开启')
+    expect(wrapper.text()).toContain('摘要：Smoke test ready')
   })
 
-  it('does not expose navigation cards', () => {
-    const wrapper = mount(IndexPage)
+  it('updates pinia state through page interactions', async () => {
+    const { wrapper, store } = mountIndexPage()
+    const buttons = wrapper.findAll('button')
 
-    expect(wrapper.find('.card').exists()).toBe(false)
-    expect(wrapper.find('.hero').exists()).toBe(true)
-    expect(uni.navigateTo).not.toHaveBeenCalled()
+    await buttons[0].trigger('click')
+    await buttons[2].trigger('click')
+    await wrapper.get('input').setValue('Pinia note updated')
+
+    expect(store.count).toBe(3)
+    expect(store.enabled).toBe(false)
+    expect(store.note).toBe('Pinia note updated')
+    expect(wrapper.text()).toContain('已暂停')
+    expect(wrapper.text()).toContain('摘要：Pinia note updated')
   })
 })

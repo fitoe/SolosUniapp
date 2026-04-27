@@ -1,0 +1,8 @@
+onlyBuiltDependencies:
+  - '@swc/core'
+  - '@uni-helper/unocss-preset-uni'
+  - core-js
+  - esbuild
+  - less
+  - protobufjs
+  - vue-demi

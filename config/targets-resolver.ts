@@ -12,8 +12,8 @@ const SCRIPT_TO_TARGET: Record<string, BuildTarget> = {
 export function resolveTargetFromLifecycle(lifecycleEvent: string) {
   const target = SCRIPT_TO_TARGET[lifecycleEvent] || 'mp-weixin'
   const config = TARGETS[target]
-  const appid = config.appidEnvKey ? process.env[config.appidEnvKey] || '__UNI__STARTER' : '__UNI__STARTER'
-  const projectName = config.projectNameEnvKey ? process.env[config.projectNameEnvKey] || 'uniapp-starter' : 'uniapp-starter'
+  const appid = config.appidEnvKey ? process.env[config.appidEnvKey] || '__UNI_APP__' : '__UNI_APP__'
+  const projectName = config.projectNameEnvKey ? process.env[config.projectNameEnvKey] || 'SolosUniapp' : 'SolosUniapp'
   return {
     target,
     appid,

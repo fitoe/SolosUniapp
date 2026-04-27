@@ -1,18 +1,20 @@
-# uniapp-starter-v1
+# SolosUniapp
 
-一个面向 `h5 + 微信小程序` 的 `uni-app` 起步模板。
-模板以 `alova + 基础首页` 为默认基线，支持 `h5` 与微信小程序构建，并提供微信小程序上传。
+`SolosUniapp` 是一个面向 `H5 + 微信小程序` 的 `uni-app` 起步项目。
 
-## 项目特色
+它适合用来快速开始一个新业务项目：基础结构已经准备好，常用工程能力也已经接入，你可以把注意力更多放在页面、接口和业务流程本身，而不是重复搭建脚手架。
 
-- 固定技术栈：`uni-app + Vue3 + TypeScript + Vite + UnoCSS`
-- 固定请求方案：`alova`
-- 默认只保留一个基础首页，便于继续开发
-- 双端目标映射：统一管理环境与平台参数
-- 自动化上传：支持微信小程序
-- AI 友好：提供 `AGENTS.md`、`ai-context.json`、`TESTING_POLICY.md`
+项目默认保持克制，只保留开发中最常用的一组基础能力：
 
-## 支持平台
+- `Vue 3 + TypeScript + Vite`
+- `UnoCSS`
+- `Pinia`
+- `alova`
+- 微信小程序构建与自动化上传
+
+如果你希望要的是一个干净、稳定、能直接继续开发的 uni-app 基础仓库，这个项目就是为这个目的准备的。
+
+## 适用平台
 
 - `h5`
 - `mp-weixin`
@@ -27,89 +29,107 @@ pnpm i
 
 2. 准备环境变量
 
-- 复制并填写：`env/.env.example`
-- 微信上传场景可额外参考：`env/.env.wechat.example`
+- 基础环境变量参考：`env/.env.example`
+- 微信小程序相关变量参考：`env/.env.wechat.example`
 
-3. 本地开发
+3. 启动开发
 
 ```bash
 pnpm dev:h5
 pnpm dev:mp-weixin
 ```
 
-## 常用命令
+4. 构建产物
 
 ```bash
-# 质量检查
-pnpm type-check
-pnpm lint
-
-# 测试
-pnpm test:unit
-pnpm test:e2e
-pnpm test
-
-# 构建
 pnpm build
 pnpm build:h5
 pnpm build:mp-weixin
 ```
 
-## 自动化上传
+## 常用命令
 
 ```bash
-# 微信小程序
+# 类型检查
+pnpm type-check
+
+# 代码检查
+pnpm lint
+
+# 单元测试
+pnpm test:unit
+
+# H5 E2E
+pnpm test:e2e
+
+# 微信小程序冒烟测试
+pnpm test:mp:smoke
+
+# 全量测试
+pnpm test
+```
+
+## 微信小程序
+
+### 本地开发
+
+开发微信小程序时，先运行：
+
+```bash
+pnpm dev:mp-weixin
+```
+
+然后在微信开发者工具中打开：
+
+```text
+dist/dev/mp-weixin
+```
+
+### 上传
+
+```bash
 pnpm upload:mp
 ```
 
-## 微信开发者工具自动化调试
+上传能力基于 `miniprogram-ci`，需要提前准备：
 
-这套能力走微信官方自动化链路：
+- `VITE_APPID_WEIXIN`
+- `VITE_PROJECT_NAME_WEIXIN`
+- `WX_PRIVATE_KEY_PATH_WEIXIN`
 
-- `cli auto --auto-port`
-- `miniprogram-automator`
+或：
 
-适合在开发时做这些事：
+- `WX_PRIVATE_KEY_WEIXIN_BASE64`
+- `WX_PRIVATE_KEY_WEIXIN`
 
-- 连接开发者工具中的小程序
-- 输出当前页面和页面栈
-- 截图
+### 自动化调试
+
+仓库内已提供微信开发者工具自动化调试脚本，适合做页面检查、截图和简单冒烟验证。
+
+这组能力默认面向 AI / Agent 使用。
+正常开发时，不需要人主动执行这些调试命令；当任务需要连接微信开发者工具、读取页面状态、截图或执行小程序冒烟验证时，AI 应自动启用。
 
 使用前提：
 
-1. 先运行 `pnpm dev:mp-weixin`
-2. 在微信开发者工具里打开 `dist/dev/mp-weixin`
-3. 在“设置 -> 安全设置”里开启服务端口
+1. 已执行 `pnpm dev:mp-weixin`
+2. 微信开发者工具已打开 `dist/dev/mp-weixin`
+3. “设置 -> 安全设置” 已开启服务端口
 
-这套能力默认给 AI/Agent 使用，不再暴露 npm 命令入口。
-当任务涉及微信小程序页面调试、页面栈、截图、元素交互时，Agent 应自动执行：
+AI / Agent 需要时可自动调用：
 
-1. 确认 `dist/dev/mp-weixin` 已存在，否则提示先运行 `pnpm dev:mp-weixin`
-2. 执行 `scripts/wechat-devtools-enable.mjs`
-3. 需要读取状态时执行 `scripts/wechat-devtools.mjs inspect`
-4. 需要截图时执行 `scripts/wechat-devtools.mjs screenshot`
+```bash
+pnpm debug:mp:enable
+pnpm debug:mp:inspect
+pnpm debug:mp:screenshot
+pnpm test:mp:smoke
+```
 
-如果自动化端口连接失败，应明确提示：
+如果连接失败，优先检查：
 
-- 先确认微信开发者工具已打开 `dist/dev/mp-weixin`
-- 确认“设置 -> 安全设置”已开启服务端口
-- 再重试自动启用和连接
+- 开发者工具是否打开了正确目录
+- 服务端口是否已开启
 
-可选环境变量：
-
-- `GIT_BASH_PATH`：Windows 下自定义 Git Bash 路径
-- `WECHAT_DEVTOOLS_CLI`：自定义微信开发者工具 `cli` 路径
-- `WECHAT_DEVTOOLS_HTTP_PORT`：开发者工具当前 HTTP 服务端口
-- `WECHAT_AUTO_PORT`：自动化 WebSocket 端口，默认 `9420`
-- `WECHAT_MINIPROGRAM_PROJECT_PATH`：要连接的小程序项目目录，默认 `dist/dev/mp-weixin`
-
-调试产物约定：
-
-- Playwright 输出：`.tmp/playwright/test-results`
-- Automator 默认截图：`.tmp/automator/`
-- 以上目录已加入 `.gitignore`
-
-## 必需环境变量
+## 环境变量
 
 基础变量：
 
@@ -118,55 +138,69 @@ pnpm upload:mp
 - `VITE_UPLOAD_HOST`
 - `VITE_UPLOAD_PATH`
 
-平台标识：
+微信小程序变量：
 
 - `VITE_APPID_WEIXIN`
 - `VITE_PROJECT_NAME_WEIXIN`
 
 上传凭证：
 
-- 微信：`WX_PRIVATE_KEY_PATH_WEIXIN` 或 `WX_PRIVATE_KEY_WEIXIN_BASE64` 或 `WX_PRIVATE_KEY_WEIXIN`
+- `WX_PRIVATE_KEY_PATH_WEIXIN`
+- `WX_PRIVATE_KEY_WEIXIN_BASE64`
+- `WX_PRIVATE_KEY_WEIXIN`
 
-## 发布流程（建议）
+## 依赖兼容说明
 
-1. 填写环境变量和微信上传凭证
-2. 执行 `pnpm type-check && pnpm lint && pnpm test`
-3. 执行 `pnpm build` 或 `pnpm build:h5`
-4. 执行上传命令（`pnpm upload:mp`）
+微信小程序样式链路目前固定了一组 `UnoCSS` 兼容版本，用来避免 `mp-weixin` 构建后样式异常。
 
-## 目录说明
+当前固定版本：
+
+- `@uni-helper/unocss-preset-uni`: `0.2.11`
+- `unocss`: `0.65.4`
+- `unocss-applet`: `0.9.0`
+- `@unocss/preset-icons`: `0.65.4`
+- `@unocss/eslint-config`: `0.65.4`
+
+维护建议：
+
+- 不要把这组依赖改回 `^` 范围版本
+- 升级前先验证 `pnpm build:mp-weixin`
+- 确认 `dist/build/mp-weixin` 仍正常生成 `app.wxss` 和 `pages/*.wxss`
+
+## 目录结构
 
 - `src/`：业务源码
-- `config/`：目标平台映射与解析
-- `scripts/`：环境校验、构建检查、上传脚本
-- `tests/`：Vitest + Playwright 测试
+- `config/`：平台目标与环境解析
+- `scripts/`：构建、调试、上传脚本
+- `tests/`：Vitest、Playwright、小程序冒烟测试
 - `.github/workflows/`：CI 工作流
 
-## 测试原则
+## 开发约定
 
-本模板将测试作为默认开发原则：
+- 组件改动应补充或更新单元测试
+- 页面改动应同步更新单元测试和 E2E 测试
+- 发布前建议执行：
 
-- 组件修改必须补充或更新单元测试（Vitest）
-- 页面修改必须同时补充或更新单元测试与 E2E 测试（Playwright）
+```bash
+pnpm type-check
+pnpm lint
+pnpm test
+pnpm build
+```
 
-详情见：`TESTING_POLICY.md`
+详细规则见：`TESTING_POLICY.md`
 
-## AI 协作说明
+## AI 协作文件
 
-- `AGENTS.md`：给 AI/开发者的架构与工作约束
-- `ai-context.json`：给自动化 Agent 的结构化上下文
-- 微信小程序开发者工具自动化优先按 `AGENTS.md` 中的规则自动启用
+如果你会让 AI 或自动化 Agent 参与开发，这几个文件有用：
 
-建议新会话开始时优先读取这两个文件，以便快速进入可执行状态。
+- `AGENTS.md`
+- `ai-context.json`
+- `TESTING_POLICY.md`
 
-## 安全说明
+## 其他说明
 
-- 不要提交真实密钥、Token、AppID 机密信息
-- 仅提交示例环境文件
-- 发布前执行密钥扫描（见 `scripts/scan-secrets.md`）
-
-## 开源协作
-
-- 贡献指南：`CONTRIBUTING.md`
+- 贡献说明：`CONTRIBUTING.md`
 - 发布说明：`RELEASE.md`
-- 许可证：`LICENSE`（MIT）
+- 不要提交真实密钥、Token、AppID
+- 许可证：`MIT`

@@ -1,6 +1,6 @@
 # 贡献指南
 
-感谢你为 `uniapp-starter-v1` 做贡献。
+感谢你为 `SolosUniapp` 做贡献。
 
 ## 基本要求
 

@@ -10,7 +10,7 @@ const projectName = targetInfo.projectName
 export default defineManifestConfig({
   'name': projectName,
   appid,
-  'description': 'uniapp starter',
+  'description': 'uni-app application starter',
   'versionName': pkg.version,
   'versionCode': '100',
   'transformPx': false,
