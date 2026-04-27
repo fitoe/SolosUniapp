@@ -1,25 +1,21 @@
 # uniapp-starter-v1
 
-一个面向多端小程序发布的 `uni-app` 起步模板。  
-模板以 `uni-ui + alova + auth + chart` 为固定能力基线，默认支持微信、抖音、快手、小红书四端构建与上传。
+一个面向 `h5 + 微信小程序` 的 `uni-app` 起步模板。
+模板以 `alova + 基础首页` 为默认基线，支持 `h5` 与微信小程序构建，并提供微信小程序上传。
 
 ## 项目特色
 
 - 固定技术栈：`uni-app + Vue3 + TypeScript + Vite + UnoCSS`
-- 固定 UI 组件库：`uni-ui`（兼容主流小程序平台）
 - 固定请求方案：`alova`
-- 内置业务基础能力：登录鉴权（`auth`）+ 图表页面（`chart`）
-- 多端目标映射：统一管理环境与平台参数
-- 自动化上传：支持微信、抖音、快手、小红书
+- 默认只保留一个基础首页，便于继续开发
+- 双端目标映射：统一管理环境与平台参数
+- 自动化上传：支持微信小程序
 - AI 友好：提供 `AGENTS.md`、`ai-context.json`、`TESTING_POLICY.md`
 
 ## 支持平台
 
 - `h5`
 - `mp-weixin`
-- `mp-toutiao`
-- `mp-kuaishou`
-- `mp-xhs`
 
 ## 快速开始
 
@@ -39,9 +35,6 @@ pnpm i
 ```bash
 pnpm dev:h5
 pnpm dev:mp-weixin
-pnpm dev:mp-toutiao
-pnpm dev:mp-kuaishou
-pnpm dev:mp-xhs
 ```
 
 ## 常用命令
@@ -57,39 +50,64 @@ pnpm test:e2e
 pnpm test
 
 # 构建
+pnpm build
 pnpm build:h5
 pnpm build:mp-weixin
-pnpm build:mp-toutiao
-pnpm build:mp-kuaishou
-pnpm build:mp-xhs
-pnpm build:all-mini
-pnpm smoke:build-mini
-
-# 发布前检查（推荐）
-pnpm release:check
-
-# 清理产物
-pnpm clean
 ```
 
 ## 自动化上传
 
 ```bash
-# 微信
+# 微信小程序
 pnpm upload:mp
-
-# 抖音
-pnpm upload:douyin
-
-# 快手
-pnpm upload:kuaishou
-
-# 小红书
-pnpm upload:xhs
-
-# 四端顺序上传
-pnpm upload:all
 ```
+
+## 微信开发者工具自动化调试
+
+这套能力走微信官方自动化链路：
+
+- `cli auto --auto-port`
+- `miniprogram-automator`
+
+适合在开发时做这些事：
+
+- 连接开发者工具中的小程序
+- 输出当前页面和页面栈
+- 截图
+
+使用前提：
+
+1. 先运行 `pnpm dev:mp-weixin`
+2. 在微信开发者工具里打开 `dist/dev/mp-weixin`
+3. 在“设置 -> 安全设置”里开启服务端口
+
+这套能力默认给 AI/Agent 使用，不再暴露 npm 命令入口。
+当任务涉及微信小程序页面调试、页面栈、截图、元素交互时，Agent 应自动执行：
+
+1. 确认 `dist/dev/mp-weixin` 已存在，否则提示先运行 `pnpm dev:mp-weixin`
+2. 执行 `scripts/wechat-devtools-enable.mjs`
+3. 需要读取状态时执行 `scripts/wechat-devtools.mjs inspect`
+4. 需要截图时执行 `scripts/wechat-devtools.mjs screenshot`
+
+如果自动化端口连接失败，应明确提示：
+
+- 先确认微信开发者工具已打开 `dist/dev/mp-weixin`
+- 确认“设置 -> 安全设置”已开启服务端口
+- 再重试自动启用和连接
+
+可选环境变量：
+
+- `GIT_BASH_PATH`：Windows 下自定义 Git Bash 路径
+- `WECHAT_DEVTOOLS_CLI`：自定义微信开发者工具 `cli` 路径
+- `WECHAT_DEVTOOLS_HTTP_PORT`：开发者工具当前 HTTP 服务端口
+- `WECHAT_AUTO_PORT`：自动化 WebSocket 端口，默认 `9420`
+- `WECHAT_MINIPROGRAM_PROJECT_PATH`：要连接的小程序项目目录，默认 `dist/dev/mp-weixin`
+
+调试产物约定：
+
+- Playwright 输出：`.tmp/playwright/test-results`
+- Automator 默认截图：`.tmp/automator/`
+- 以上目录已加入 `.gitignore`
 
 ## 必需环境变量
 
@@ -104,25 +122,17 @@ pnpm upload:all
 
 - `VITE_APPID_WEIXIN`
 - `VITE_PROJECT_NAME_WEIXIN`
-- `VITE_APPID_TOUTIAO`
-- `VITE_PROJECT_NAME_TOUTIAO`
-- `VITE_APPID_KUAISHOU`
-- `VITE_PROJECT_NAME_KUAISHOU`
-- `VITE_APPID_XHS`
-- `VITE_PROJECT_NAME_XHS`
 
 上传凭证：
 
 - 微信：`WX_PRIVATE_KEY_PATH_WEIXIN` 或 `WX_PRIVATE_KEY_WEIXIN_BASE64` 或 `WX_PRIVATE_KEY_WEIXIN`
-- 抖音：`DOUYIN_TOKEN`
-- 快手：`KS_PRIVATE_KEY_PATH` 或 `KS_PRIVATE_KEY_BASE64` 或 `KS_PRIVATE_KEY`
-- 小红书：`XHS_TOKEN`
 
 ## 发布流程（建议）
 
-1. 填写环境变量和各平台上传凭证  
-2. 执行 `pnpm release:check`  
-3. 执行目标上传命令（`pnpm upload:mp` 或 `pnpm upload:all`）
+1. 填写环境变量和微信上传凭证
+2. 执行 `pnpm type-check && pnpm lint && pnpm test`
+3. 执行 `pnpm build` 或 `pnpm build:h5`
+4. 执行上传命令（`pnpm upload:mp`）
 
 ## 目录说明
 
@@ -145,6 +155,7 @@ pnpm upload:all
 
 - `AGENTS.md`：给 AI/开发者的架构与工作约束
 - `ai-context.json`：给自动化 Agent 的结构化上下文
+- 微信小程序开发者工具自动化优先按 `AGENTS.md` 中的规则自动启用
 
 建议新会话开始时优先读取这两个文件，以便快速进入可执行状态。
 

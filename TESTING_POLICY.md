@@ -12,6 +12,7 @@ For every new or changed UI unit:
 - E2E tests: `tests/e2e/**`
 
 ## Required Commands
+- `pnpm test`
 - `pnpm test:unit`
 - `pnpm test:e2e`
 

@@ -1,9 +1,9 @@
 node_modules/
 dist/
 .vite/
-test-results/
-playwright-report/
 coverage/
+.tmp/
+tmp-*.log
 
 auto-imports.d.ts
 components.d.ts

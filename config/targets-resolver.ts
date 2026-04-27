@@ -7,12 +7,6 @@ const SCRIPT_TO_TARGET: Record<string, BuildTarget> = {
   'build:h5': 'h5',
   'dev:mp-weixin': 'mp-weixin',
   'build:mp-weixin': 'mp-weixin',
-  'dev:mp-toutiao': 'mp-toutiao',
-  'build:mp-toutiao': 'mp-toutiao',
-  'dev:mp-kuaishou': 'mp-kuaishou',
-  'build:mp-kuaishou': 'mp-kuaishou',
-  'dev:mp-xhs': 'mp-xhs',
-  'build:mp-xhs': 'mp-xhs',
 }
 
 export function resolveTargetFromLifecycle(lifecycleEvent: string) {

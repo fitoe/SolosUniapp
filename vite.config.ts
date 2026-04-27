@@ -1,8 +1,8 @@
 import { resolve } from 'node:path'
 import process from 'node:process'
 import Uni from '@dcloudio/vite-plugin-uni'
-import { uniuseAutoImports } from '@uni-helper/uni-use'
 import Components from '@uni-helper/vite-plugin-uni-components'
+import { WotResolver } from '@uni-helper/vite-plugin-uni-components/resolvers'
 import UniLayouts from '@uni-helper/vite-plugin-uni-layouts'
 import UniManifest from '@uni-helper/vite-plugin-uni-manifest'
 import UniPages from '@uni-helper/vite-plugin-uni-pages'
@@ -13,6 +13,7 @@ import uniPolyfill from 'vite-plugin-uni-polyfill'
 
 export default ({ mode }: { mode: string }) => {
   const env = loadEnv(mode, process.cwd())
+  const isH5Dev = process.env.UNI_PLATFORM === 'h5' && process.env.NODE_ENV === 'development'
   const uniMaybe = Uni as unknown as (() => unknown) | { default: () => unknown }
   const createUniPlugin: () => any = typeof uniMaybe === 'function' ? uniMaybe : uniMaybe.default
   return defineConfig({
@@ -39,7 +40,7 @@ export default ({ mode }: { mode: string }) => {
       },
     },
     optimizeDeps: {
-      exclude: ['vue-demi'],
+      exclude: isH5Dev ? ['vue-demi', 'wot-design-uni'] : ['vue-demi'],
     },
     publicDir: 'public',
     build: {
@@ -65,7 +66,6 @@ export default ({ mode }: { mode: string }) => {
         imports: [
           'vue',
           'uni-app',
-          uniuseAutoImports(),
           'pinia',
           { 'alova/client': ['useRequest', 'usePagination', 'useAutoRequest', 'useWatcher'] },
         ],
@@ -76,7 +76,7 @@ export default ({ mode }: { mode: string }) => {
       Components({
         dts: 'src/components.d.ts',
         directoryAsNamespace: false,
-        resolvers: [],
+        resolvers: [WotResolver()],
       }),
       createUniPlugin(),
     ],

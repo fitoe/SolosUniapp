@@ -1,4 +1,4 @@
-name: Upload All Mini Programs
+name: Upload Weixin Mini Program Alias
 
 on:
   workflow_dispatch:
@@ -27,16 +27,7 @@ jobs:
       VITE_UPLOAD_PATH: ${{ secrets.VITE_UPLOAD_PATH }}
       VITE_APPID_WEIXIN: ${{ secrets.VITE_APPID_WEIXIN }}
       VITE_PROJECT_NAME_WEIXIN: ${{ secrets.VITE_PROJECT_NAME_WEIXIN }}
-      VITE_APPID_TOUTIAO: ${{ secrets.VITE_APPID_TOUTIAO }}
-      VITE_PROJECT_NAME_TOUTIAO: ${{ secrets.VITE_PROJECT_NAME_TOUTIAO }}
-      VITE_APPID_KUAISHOU: ${{ secrets.VITE_APPID_KUAISHOU }}
-      VITE_PROJECT_NAME_KUAISHOU: ${{ secrets.VITE_PROJECT_NAME_KUAISHOU }}
-      VITE_APPID_XHS: ${{ secrets.VITE_APPID_XHS }}
-      VITE_PROJECT_NAME_XHS: ${{ secrets.VITE_PROJECT_NAME_XHS }}
       WX_PRIVATE_KEY_WEIXIN_BASE64: ${{ secrets.WX_PRIVATE_KEY_WEIXIN_BASE64 }}
-      KS_PRIVATE_KEY_BASE64: ${{ secrets.KS_PRIVATE_KEY_BASE64 }}
-      DOUYIN_TOKEN: ${{ secrets.DOUYIN_TOKEN }}
-      XHS_TOKEN: ${{ secrets.XHS_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -55,7 +46,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Upload all mini programs
+      - name: Upload weixin via alias command
         shell: bash
         run: |
           ARGS="--robot=${{ github.event.inputs.robot }}"

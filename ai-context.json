@@ -5,12 +5,12 @@
     "status": "ready",
     "stack": ["uni-app", "vue3", "typescript", "vite", "uni-helper", "unocss"],
     "constraints": {
-      "ui_library": "uni-ui",
+      "ui_library": "none",
       "request_library": "alova",
-      "features_enabled": ["auth", "chart"]
+      "features_enabled": ["basic-home"]
     }
   },
-  "platforms": ["h5", "mp-weixin", "mp-toutiao", "mp-kuaishou", "mp-xhs"],
+  "platforms": ["h5", "mp-weixin"],
   "entrypoints": {
     "app": "src/main.ts",
     "vite": "vite.config.ts",
@@ -19,48 +19,43 @@
     "targets": "config/targets.ts"
   },
   "modules": {
-    "auth": [
-      "src/core/auth/constants.ts",
-      "src/core/auth/store.ts",
-      "src/core/auth/guard.ts"
-    ],
     "request": [
       "src/core/request/alova.ts",
       "src/core/request/http.ts"
     ],
-    "chart": [
-      "src/pages/chart/index.vue",
-      "src/components/qiun-data-charts/qiun-data-charts.vue"
-    ],
     "upload": [
-      "scripts/upload-weixin.mjs",
-      "scripts/upload-douyin.mjs",
-      "scripts/upload-kuaishou.mjs",
-      "scripts/upload-xhs.mjs",
-      "scripts/upload-all.mjs"
+      "scripts/upload-weixin.mjs"
     ]
   },
   "commands": {
     "install": "pnpm i",
-    "clean": "pnpm clean",
-    "release_check": "pnpm release:check",
     "check": ["pnpm type-check", "pnpm lint"],
     "test": ["pnpm test:unit", "pnpm test:e2e"],
     "dev": [
       "pnpm dev:h5",
-      "pnpm dev:mp-weixin",
-      "pnpm dev:mp-toutiao",
-      "pnpm dev:mp-kuaishou",
-      "pnpm dev:mp-xhs"
+      "pnpm dev:mp-weixin"
     ],
-    "build": ["pnpm build:h5", "pnpm build:all-mini", "pnpm smoke:build-mini"],
+    "build": ["pnpm build", "pnpm build:h5", "pnpm build:mp-weixin"],
     "upload": [
-      "pnpm upload:mp",
-      "pnpm upload:douyin",
-      "pnpm upload:kuaishou",
-      "pnpm upload:xhs",
-      "pnpm upload:all"
+      "pnpm upload:mp"
     ]
+  },
+  "automation": {
+    "wechat_devtools": {
+      "sdk": "miniprogram-automator",
+      "wrapper": "scripts/wechat-devtools.mjs",
+      "enable_entry": "scripts/wechat-devtools-enable.mjs",
+      "default_project_path": "dist/dev/mp-weixin",
+      "default_auto_port": 9420,
+      "agent_rule": [
+        "Auto-enable only when the task actually needs Wechat DevTools debugging for mp-weixin",
+        "Require dist/dev/mp-weixin to exist; otherwise ask user to run pnpm dev:mp-weixin first",
+        "Use scripts/wechat-devtools-enable.mjs on Windows",
+        "Use node ./scripts/wechat-devtools.mjs inspect for page stack and current page",
+        "Use node ./scripts/wechat-devtools.mjs screenshot for screenshots",
+        "If connection fails, tell user to verify DevTools opened dist/dev/mp-weixin and enabled the service port in security settings"
+      ]
+    }
   },
   "env": {
     "examples": ["env/.env.example", "env/.env.wechat.example"],
@@ -72,23 +67,14 @@
     ],
     "required_platform": [
       "VITE_APPID_WEIXIN",
-      "VITE_PROJECT_NAME_WEIXIN",
-      "VITE_APPID_TOUTIAO",
-      "VITE_PROJECT_NAME_TOUTIAO",
-      "VITE_APPID_KUAISHOU",
-      "VITE_PROJECT_NAME_KUAISHOU",
-      "VITE_APPID_XHS",
-      "VITE_PROJECT_NAME_XHS"
+      "VITE_PROJECT_NAME_WEIXIN"
     ],
     "required_upload_secrets": {
       "weixin": [
         "WX_PRIVATE_KEY_PATH_WEIXIN",
         "WX_PRIVATE_KEY_WEIXIN_BASE64",
         "WX_PRIVATE_KEY_WEIXIN"
-      ],
-      "douyin": ["DOUYIN_TOKEN"],
-      "kuaishou": ["KS_PRIVATE_KEY_PATH", "KS_PRIVATE_KEY_BASE64", "KS_PRIVATE_KEY"],
-      "xhs": ["XHS_TOKEN"]
+      ]
     }
   },
   "ci": {

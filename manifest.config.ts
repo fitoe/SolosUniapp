@@ -14,30 +14,6 @@ export default defineManifestConfig({
   'versionName': pkg.version,
   'versionCode': '100',
   'transformPx': false,
-  'app-plus': {
-    usingComponents: true,
-    nvueStyleCompiler: 'uni-app',
-    compilerVersion: 3,
-    compatible: {
-      ignoreVersion: true,
-    },
-    splashscreen: {
-      alwaysShowBeforeRender: false,
-      waiting: false,
-      autoclose: true,
-      delay: 0,
-    },
-    modules: {},
-    distribute: {
-      android: {
-        minSdkVersion: 21,
-        permissions: [],
-      },
-      ios: {},
-      sdkConfigs: {},
-    },
-  },
-  'quickapp': {},
   'mp-weixin': {
     appid,
     projectname: projectName,
@@ -51,27 +27,6 @@ export default defineManifestConfig({
     usingComponents: true,
     darkmode: false,
     lazyCodeLoading: 'requiredComponents',
-  },
-  'mp-xhs': {
-    appid,
-    projectname: projectName,
-    usingComponents: true,
-  },
-  'mp-toutiao': {
-    appid,
-    projectname: projectName,
-    usingComponents: true,
-  },
-  'mp-kuaishou': {
-    appid,
-    projectname: projectName,
-    usingComponents: true,
-  },
-  'mp-alipay': {
-    usingComponents: true,
-  },
-  'mp-baidu': {
-    usingComponents: true,
   },
   'h5': {
     router: {

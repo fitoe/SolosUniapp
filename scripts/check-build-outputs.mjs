@@ -4,9 +4,6 @@ import process from 'node:process'
 
 const REQUIRED_OUTPUTS = [
   'dist/build/mp-weixin',
-  'dist/build/mp-toutiao',
-  'dist/build/mp-kuaishou',
-  'dist/build/mp-xhs',
 ]
 
 function existsNonEmptyDir(relativePath) {

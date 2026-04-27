@@ -28,7 +28,6 @@ export const alovaInstance = createAlova({
       if (response.statusCode === 401) {
         const authStore = useAuthStore()
         authStore.logout()
-        uni.navigateTo({ url: '/pages/login' })
         throw new Error('Unauthorized')
       }
 

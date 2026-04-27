@@ -19,4 +19,3 @@ gitleaks detect --source . --verbose
 
 ## Block release when
 - Any secret is found in tracked files.
-- `validate-env.mjs` fails for the target build.
