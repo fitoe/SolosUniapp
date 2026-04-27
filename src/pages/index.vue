@@ -12,29 +12,6 @@ const { count, enabled, note } = storeToRefs(playground)
 const statusText = computed(() => enabled.value ? '已开启' : '已暂停')
 const noteSummary = computed(() => note.value.trim() || '尚未填写摘要')
 
-const capabilityCards = [
-  {
-    title: 'UnoCSS',
-    tag: 'Style',
-    description: '布局、间距、排版和常见视觉修饰优先走内置 utility，保持页面开发节奏。',
-  },
-  {
-    title: '自动引入',
-    tag: 'DX',
-    description: '页面和组件开发时，大多数常用 API 与组件都不需要手动补 import。',
-  },
-  {
-    title: 'Pinia 持久化',
-    tag: 'State',
-    description: '首页状态可以直接验证持久化效果，方便确认基础状态管理链路可用。',
-  },
-  {
-    title: 'Wot 组件',
-    tag: 'UI',
-    description: '组件外观优先通过 props 配置，适合在真实业务页面中直接继续扩展。',
-  },
-] as const
-
 function handleNoteInput(event: any) {
   const detailValue = event?.detail?.value
   const targetValue = event?.target?.value
@@ -43,19 +20,12 @@ function handleNoteInput(event: any) {
 </script>
 
 <template>
-  <view class="page px-4 py-6">
-    <view class="hero rounded-4xl border border-white/70 bg-white/86 p-6 backdrop-blur-sm">
-      <view class="hero-top">
-        <text class="hero-badge">Starter</text>
-        <text class="hero-platform">H5 + mp-weixin</text>
-      </view>
-
-      <text class="hero-title mt-4">SolosUniapp 起步首页</text>
-      <text class="hero-desc mt-3">
-        一个更适合继续开发的起步页：保留基础工程能力展示，同时把首页结构收敛成更清晰的业务骨架。
-      </text>
-
-      <view class="hero-meta mt-5">
+  <view class="page px-4 py-7">
+    <view class="hero">
+      <text class="hero-badge">Starter</text>
+      <text class="hero-title">SolosUniapp 起步首页</text>
+      <text class="hero-desc">保留基础能力验证，首页尽量轻，方便直接继续开发。</text>
+      <view class="hero-meta">
         <text class="hero-chip">Vue 3</text>
         <text class="hero-chip">UnoCSS</text>
         <text class="hero-chip">Pinia</text>
@@ -63,80 +33,65 @@ function handleNoteInput(event: any) {
       </view>
     </view>
 
-    <view class="section-grid pt-5">
+    <view class="section-grid">
       <view class="panel">
-        <view class="panel-head">
-          <text class="panel-title">开箱能力</text>
-          <text class="panel-tag">Overview</text>
+        <view class="panel-head compact">
+          <text class="panel-title">基础能力</text>
+          <text class="panel-tag">Playground</text>
         </view>
 
-        <view class="capability-grid">
-          <view
-            v-for="card in capabilityCards"
-            :key="card.title"
-            class="capability-card"
-          >
-            <view class="capability-head">
-              <text class="capability-title">{{ card.title }}</text>
-              <text class="capability-tag">{{ card.tag }}</text>
-            </view>
-            <text class="capability-copy">{{ card.description }}</text>
+        <view class="feature-grid">
+          <view class="feature-card feature-card-brand">
+            <view class="feature-icon i-carbon-color-palette" />
+            <text class="feature-title">UnoCSS</text>
+            <text class="feature-copy">渐变、圆角、间距与排版。</text>
+          </view>
+          <view class="feature-card feature-card-tint">
+            <view class="feature-icon i-mdi-auto-fix text-violet-600" />
+            <text class="feature-title">自动引入</text>
+            <text class="feature-copy">常用 API 默认不手动导入。</text>
+          </view>
+          <view class="feature-card feature-card-tint">
+            <view class="feature-icon i-mdi-database-sync text-emerald-600" />
+            <text class="feature-title">Pinia</text>
+            <text class="feature-copy">状态持久化与输入绑定。</text>
+          </view>
+          <view class="feature-card">
+            <view class="feature-icon i-mdi-check-decagram text-amber-500" />
+            <text class="feature-title">Wot</text>
+            <text class="feature-copy">组件与 props 配置链路。</text>
           </view>
         </view>
       </view>
 
       <view class="panel">
-        <view class="panel-head">
-          <text class="panel-title">样式与图标</text>
-          <text class="panel-tag">UI</text>
-        </view>
-
-        <view class="showcase-card">
-          <text class="showcase-copy">
-            这里同时验证 UnoCSS 的渐变、阴影、圆角、排版，以及 Iconify 图标渲染是否正常。
-          </text>
-
-          <view class="showcase-icons">
-            <view class="icon-card">
-              <view class="icon-token i-carbon-color-palette text-sky-600" />
-              <text class="icon-label">Palette</text>
-            </view>
-            <view class="icon-card">
-              <view class="icon-token i-carbon-cloud-service-management text-violet-600" />
-              <text class="icon-label">Cloud</text>
-            </view>
-            <view class="icon-card">
-              <view class="icon-token i-mdi-lightning-bolt-circle text-amber-500" />
-              <text class="icon-label">Action</text>
-            </view>
-            <view class="icon-card">
-              <view class="icon-token i-mdi-check-decagram text-emerald-500" />
-              <text class="icon-label">Ready</text>
-            </view>
-          </view>
-        </view>
-      </view>
-
-      <view class="panel">
-        <view class="panel-head">
+        <view class="panel-head compact">
           <text class="panel-title">状态与交互</text>
-          <text class="panel-tag">Pinia</text>
+          <text class="panel-tag">Persist</text>
         </view>
 
-        <text class="panel-copy">刷新 H5 页面后，计数、状态和备注应继续保留。</text>
+        <text class="panel-copy">刷新后，计数、状态和摘要应继续保留。</text>
 
-        <view class="stats-grid">
-          <view class="stat-card">
-            <text class="stat-label">当前计数</text>
-            <text class="stat-value" data-testid="count-value">{{ count }}</text>
+        <view class="info-block">
+          <view class="stats-grid">
+            <view class="stat-card">
+              <text class="stat-label">当前计数</text>
+              <text class="stat-value" data-testid="count-value">{{ count }}</text>
+            </view>
+            <view class="stat-card">
+              <text class="stat-label">开关状态</text>
+              <text class="stat-value" data-testid="status-value">{{ statusText }}</text>
+            </view>
           </view>
-          <view class="stat-card">
-            <text class="stat-label">开关状态</text>
-            <text class="stat-value" data-testid="status-value">{{ statusText }}</text>
+
+          <view class="wot-preview">
+            <wd-tag type="primary">Wot 已加载</wd-tag>
+            <wd-tag :type="enabled ? 'success' : 'warning'">{{ statusText }}</wd-tag>
+            <wd-tag type="primary">Count {{ count }}</wd-tag>
           </view>
         </view>
 
-        <view class="action-row">
+        <view class="action-row action-row-primary">
           <wd-button type="primary" size="small" @click="playground.increment">+1 计数</wd-button>
           <wd-button size="small" plain @click="playground.decrement">-1 计数</wd-button>
           <wd-button type="success" size="small" @click="playground.toggleEnabled">切换状态</wd-button>
@@ -152,21 +107,8 @@ function handleNoteInput(event: any) {
           >
           <text class="note-summary" data-testid="note-summary">摘要：{{ noteSummary }}</text>
         </view>
-      </view>
 
-      <view class="panel">
-        <view class="panel-head">
-          <text class="panel-title">Wot 组件验证</text>
-          <text class="panel-tag">wot-design-uni</text>
-        </view>
-
-        <view class="wot-preview">
-          <wd-tag type="primary">Wot 已加载</wd-tag>
-          <wd-tag :type="enabled ? 'success' : 'warning'">{{ statusText }}</wd-tag>
-          <wd-tag type="primary">Count {{ count }}</wd-tag>
-        </view>
-
-        <view class="action-row">
+        <view class="action-row action-row-secondary">
           <wd-button block type="warning" @click="playground.setNote('Wot button clicked')">Wot 设置摘要</wd-button>
           <wd-button hairline block @click="playground.reset">重置状态</wd-button>
         </view>
@@ -179,6 +121,7 @@ function handleNoteInput(event: any) {
 .page {
   min-height: 100vh;
   box-sizing: border-box;
+  padding-bottom: 40rpx;
   background:
     radial-gradient(circle at top left, rgb(120 160 255 / 18%), transparent 38%),
     linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
@@ -187,15 +130,12 @@ function handleNoteInput(event: any) {
 .hero {
   display: flex;
   flex-direction: column;
-  gap: 20rpx;
+  gap: 24rpx;
+  padding: 44rpx 36rpx;
+  border: 1rpx solid rgb(5 110 255 / 10%);
+  border-radius: 28rpx;
+  background: rgb(255 255 255 / 88%);
   box-shadow: 0 24rpx 80rpx rgb(38 76 168 / 12%);
-}
-
-.hero-top {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 14rpx;
 }
 
 .hero-badge {
@@ -208,15 +148,6 @@ function handleNoteInput(event: any) {
   letter-spacing: 2rpx;
 }
 
-.hero-platform {
-  padding: 10rpx 18rpx;
-  border-radius: 999rpx;
-  background: #edf5ff;
-  color: #1d4ed8;
-  font-size: 22rpx;
-  font-weight: 600;
-}
-
 .hero-title {
   font-size: 56rpx;
   font-weight: 700;
@@ -224,6 +155,7 @@ function handleNoteInput(event: any) {
 }
 
 .hero-desc {
+  max-width: 720rpx;
   font-size: 28rpx;
   line-height: 1.7;
   color: #4d5f85;
@@ -232,7 +164,7 @@ function handleNoteInput(event: any) {
 .hero-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 16rpx;
+  gap: 18rpx;
 }
 
 .hero-chip {
@@ -245,29 +177,34 @@ function handleNoteInput(event: any) {
 
 .section-grid {
   display: grid;
-  gap: 32rpx;
+  gap: 28rpx;
+  padding-top: 28rpx;
 }
 
 .panel {
   display: flex;
   flex-direction: column;
-  gap: 20rpx;
-  padding: 28rpx;
+  gap: 22rpx;
+  padding: 30rpx;
   border: 1rpx solid rgb(15 23 42 / 6%);
-  border-radius: 28rpx;
+  border-radius: 24rpx;
   background: rgb(255 255 255 / 92%);
-  box-shadow: 0 18rpx 48rpx rgb(15 23 42 / 8%);
+  box-shadow: 0 16rpx 42rpx rgb(15 23 42 / 8%);
 }
 
 .panel-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20rpx;
+  gap: 16rpx;
+}
+
+.panel-head.compact {
+  align-items: flex-start;
 }
 
 .panel-title {
-  font-size: 32rpx;
+  font-size: 30rpx;
   font-weight: 600;
   color: #102347;
 }
@@ -286,105 +223,76 @@ function handleNoteInput(event: any) {
   color: #5b6785;
 }
 
-.capability-grid {
+.feature-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20rpx;
 }
 
-.capability-card {
+.feature-card {
   display: flex;
   flex-direction: column;
   gap: 14rpx;
-  border-radius: 24rpx;
+  border-radius: 20rpx;
   background: #f8fbff;
-  padding: 24rpx;
+  padding: 24rpx 22rpx;
 }
 
-.capability-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16rpx;
+.feature-card-brand {
+  background: linear-gradient(135deg, #0ea5e9 0%, #22d3ee 55%, #34d399 100%);
+  color: #fff;
 }
 
-.capability-title {
+.feature-card-tint {
+  background: linear-gradient(180deg, #fbfdff 0%, #f1f6ff 100%);
+  border: 1rpx solid rgb(49 88 166 / 8%);
+}
+
+.feature-icon {
+  font-size: 44rpx;
+  color: #0f5fd7;
+}
+
+.feature-card-brand .feature-icon,
+.feature-card-brand .feature-title,
+.feature-card-brand .feature-copy {
+  color: #fff;
+}
+
+.feature-title {
   font-size: 28rpx;
   font-weight: 600;
   color: #102347;
 }
 
-.capability-tag {
-  padding: 8rpx 16rpx;
-  border-radius: 999rpx;
-  background: #e6f1ff;
-  color: #3158a6;
-  font-size: 20rpx;
+.feature-copy {
+  font-size: 23rpx;
+  line-height: 1.55;
+  color: #5b6785;
 }
 
-.capability-copy {
-  font-size: 24rpx;
-  line-height: 1.6;
-  color: #586987;
-}
-
-.showcase-card {
+.info-block {
   display: flex;
   flex-direction: column;
-  gap: 20rpx;
-  border-radius: 24rpx;
-  background: linear-gradient(90deg, #0ea5e9 0%, #22d3ee 50%, #34d399 100%);
-  padding: 24rpx;
-  color: #fff;
-  box-shadow: 0 16rpx 40rpx rgb(14 165 233 / 20%);
-}
-
-.showcase-copy {
-  font-size: 26rpx;
-  line-height: 1.7;
-  opacity: 0.94;
-}
-
-.showcase-icons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16rpx;
-}
-
-.icon-card {
-  display: flex;
-  min-width: 140rpx;
-  flex: 1 1 0%;
-  flex-direction: column;
-  align-items: center;
-  gap: 14rpx;
-  border-radius: 24rpx;
-  background: rgb(255 255 255 / 16%);
-  padding: 24rpx 18rpx;
-}
-
-.icon-token {
-  font-size: 52rpx;
-}
-
-.icon-label {
-  font-size: 24rpx;
-  color: #fff;
+  gap: 18rpx;
+  border-radius: 20rpx;
+  background: #f8fbff;
+  padding: 22rpx;
 }
 
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20rpx;
+  gap: 16rpx;
 }
 
 .stat-card {
   display: flex;
   flex-direction: column;
-  gap: 12rpx;
-  border-radius: 24rpx;
-  background: #f8fbff;
-  padding: 24rpx;
+  gap: 14rpx;
+  border-radius: 20rpx;
+  background: #fff;
+  padding: 22rpx;
 }
 
 .stat-label {
@@ -404,10 +312,19 @@ function handleNoteInput(event: any) {
   gap: 16rpx;
 }
 
+.action-row-primary {
+  padding-top: 4rpx;
+}
+
+.action-row-secondary {
+  padding-top: 8rpx;
+  border-top: 1rpx solid rgb(15 23 42 / 6%);
+}
+
 .note-box {
   display: flex;
   flex-direction: column;
-  gap: 14rpx;
+  gap: 16rpx;
 }
 
 .note-label {
@@ -434,6 +351,6 @@ function handleNoteInput(event: any) {
 .wot-preview {
   display: flex;
   flex-wrap: wrap;
-  gap: 16rpx;
+  gap: 14rpx;
 }
 </style>
