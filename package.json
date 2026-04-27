@@ -77,10 +77,10 @@
     "vue-tsc": "^3.1.2"
   },
   "starter_contract": {
-    "ui_library": "none",
+    "ui_library": "wot-design-uni",
     "request_library": "alova",
     "features": [
-      "basic-home"
+      "home-playground"
     ]
   }
 }

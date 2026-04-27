@@ -35,11 +35,12 @@ describe('pages/index.vue', () => {
   it('renders the smoke playground sections', () => {
     const { wrapper } = mountIndexPage()
 
-    expect(wrapper.text()).toContain('SolosUniapp 能力面板')
-    expect(wrapper.text()).toContain('UnoCSS 样式验证')
-    expect(wrapper.text()).toContain('Iconify 图标验证')
-    expect(wrapper.text()).toContain('Pinia 状态验证')
+    expect(wrapper.text()).toContain('SolosUniapp 起步首页')
+    expect(wrapper.text()).toContain('开箱能力')
+    expect(wrapper.text()).toContain('样式与图标')
+    expect(wrapper.text()).toContain('状态与交互')
     expect(wrapper.text()).toContain('Wot 组件验证')
+    expect(wrapper.text()).toContain('自动引入')
     expect(wrapper.text()).toContain('当前计数')
     expect(wrapper.text()).toContain('2')
     expect(wrapper.text()).toContain('已开启')

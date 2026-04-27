@@ -3,78 +3,82 @@
     "name": "SolosUniapp",
     "type": "starter-template",
     "status": "ready",
-    "stack": ["uni-app", "vue3", "typescript", "vite", "uni-helper", "unocss"],
-    "constraints": {
-      "ui_library": "none",
-      "request_library": "alova",
-      "features_enabled": ["basic-home"]
-    }
+    "stack": ["uni-app", "vue3", "typescript", "vite", "unocss"],
+    "platforms": ["h5", "mp-weixin"],
+    "ui_library": "wot-design-uni",
+    "request_library": "alova",
+    "features": ["home-playground"],
+    "auto_import": true
   },
-  "platforms": ["h5", "mp-weixin"],
   "entrypoints": {
     "app": "src/main.ts",
-    "vite": "vite.config.ts",
-    "pages": "pages.config.ts",
-    "manifest": "manifest.config.ts",
-    "targets": "config/targets.ts"
-  },
-  "modules": {
+    "page_home": "src/pages/index.vue",
+    "layout": "src/layouts/default.vue",
     "request": [
       "src/core/request/alova.ts",
       "src/core/request/http.ts"
     ],
-    "upload": [
-      "scripts/upload-weixin.mjs",
-      "scripts/upload-all.mjs"
+    "config": [
+      "vite.config.ts",
+      "pages.config.ts",
+      "manifest.config.ts",
+      "config/targets.ts",
+      "config/targets-resolver.ts"
+    ]
+  },
+  "rules": {
+    "execution": [
+      "默认先做后报，需求明确且风险不高时直接执行",
+      "只在高风险场景阻断：删改范围大、数据或不可逆风险、目标不明确、与现有未提交改动冲突",
+      "过程汇报保持少量高信号，只在开始、关键发现、准备修改、完成验证时简短同步"
+    ],
+    "testing": [
+      "默认按风险分层验证，不要求每次修改都跑测试",
+      "小改动只做最小必要验证，不强制每次补测试",
+      "交付前默认执行 pnpm type-check、pnpm lint 和按需测试",
+      "高风险逻辑改动、回归修复、关键页面流程改动或用户明确要求时，强制补测试并提高验证强度"
+    ],
+    "code_boundary": [
+      "默认保持严格最小改动",
+      "允许提升一致性，但范围只限当前触及区域",
+      "无关历史问题或第三方库问题只简短说明，不阻止当前任务推进",
+      "仓库已内置自动引入能力，大多数情况下不需要手动引入常用依赖或组件",
+      "样式实现遵循：布局与一次性样式优先 UnoCSS，语义块与重复结构优先自定义 class",
+      "尽量少用 px-[25px]、bg-[#fff]、shadow-[...] 这类任意值 utility；优先内置 utility、设计 token 或局部 class"
+    ],
+    "documentation": [
+      "只在外部可见变化时同步文档：命令、配置方式、使用流程或对外行为变化",
+      "不要求内部实现小改动都同步 README"
+    ],
+    "workspace": [
+      "默认继续在当前分支开发，不主动新建分支或工作树",
+      "当用户要求提交时，默认尽量拆成小提交"
+    ],
+    "mp_weixin_debug": [
+      "当任务涉及 mp-weixin 页面调试、截图、页面栈、元素交互或冒烟验证时，自动启用微信开发者工具自动化",
+      "先确认 dist/dev/mp-weixin 存在，不存在则提示用户先运行 pnpm dev:mp-weixin",
+      "Windows 上优先使用 scripts/wechat-devtools-enable.mjs",
+      "检查页面状态时使用 node ./scripts/wechat-devtools.mjs inspect",
+      "截图时使用 node ./scripts/wechat-devtools.mjs screenshot",
+      "冒烟验证时使用 pnpm test:mp:smoke"
+    ],
+    "windows_shell": [
+      "Windows 上优先使用 Git Bash 执行 shell 风格命令",
+      "PowerShell 仅用于 Windows 原生命令，如 Get-ChildItem、Get-Process、Get-NetTCPConnection"
+    ],
+    "security": [
+      "不要提交真实密钥、Token 或 AppID",
+      "只保留示例环境文件",
+      "发布前按 scripts/scan-secrets.md 做敏感信息检查"
     ]
   },
   "commands": {
     "install": "pnpm i",
+    "dev": ["pnpm dev:h5", "pnpm dev:mp-weixin"],
     "check": ["pnpm type-check", "pnpm lint"],
-    "test": ["pnpm test:unit", "pnpm test:e2e", "pnpm test:mp:smoke"],
-    "dev": [
-      "pnpm dev:h5",
-      "pnpm dev:mp-weixin"
-    ],
+    "test": ["pnpm test:unit", "pnpm test:e2e", "pnpm test:mp:smoke", "pnpm test"],
     "build": ["pnpm build", "pnpm build:h5", "pnpm build:mp-weixin"],
-    "upload": [
-      "pnpm upload:mp"
-    ]
-  },
-  "automation": {
-    "wechat_devtools": {
-      "sdk": "miniprogram-automator",
-      "wrapper": "scripts/wechat-devtools.mjs",
-      "enable_entry": "scripts/wechat-devtools-enable.mjs",
-      "default_project_path": "dist/dev/mp-weixin",
-      "default_auto_port": 9420,
-      "agent_rule": [
-        "Auto-enable only when the task actually needs Wechat DevTools debugging for mp-weixin",
-        "Require dist/dev/mp-weixin to exist; otherwise ask user to run pnpm dev:mp-weixin first",
-        "Use scripts/wechat-devtools-enable.mjs on Windows",
-        "Use node ./scripts/wechat-devtools.mjs inspect for page stack and current page",
-        "Use node ./scripts/wechat-devtools.mjs screenshot for screenshots",
-        "Use pnpm test:mp:smoke for mp-weixin smoke validation after the project is connected",
-        "If connection fails, tell user to verify DevTools opened dist/dev/mp-weixin and enabled the service port in security settings"
-      ]
-    },
-    "shell_preference": {
-      "windows_default": "git-bash-preferred",
-      "git_bash_path": "C:\\Program Files\\Git\\bin\\bash.exe",
-      "fallback_env": "GIT_BASH_PATH",
-      "use_git_bash_for": [
-        "commands containing && or ||",
-        "inline environment variable assignment",
-        "pipes, globbing, redirection, and .sh scripts",
-        "multi-step shell workflows better expressed in POSIX shell"
-      ],
-      "keep_powershell_for": [
-        "Get-ChildItem",
-        "Get-Process",
-        "Get-NetTCPConnection",
-        "other Windows-native inspection commands"
-      ]
-    }
+    "upload": ["pnpm upload:mp"]
   },
   "env": {
     "examples": ["env/.env.example", "env/.env.wechat.example"],
@@ -84,43 +88,25 @@
       "VITE_UPLOAD_HOST",
       "VITE_UPLOAD_PATH"
     ],
-    "required_platform": [
+    "required_mp_weixin": [
       "VITE_APPID_WEIXIN",
       "VITE_PROJECT_NAME_WEIXIN"
     ],
-    "required_upload_secrets": {
-      "weixin": [
-        "WX_PRIVATE_KEY_PATH_WEIXIN",
-        "WX_PRIVATE_KEY_WEIXIN_BASE64",
-        "WX_PRIVATE_KEY_WEIXIN"
-      ]
-    }
-  },
-  "ci": {
-    "workflows": [
-      ".github/workflows/mini-build.yml",
-      ".github/workflows/upload-weixin.yml",
-      ".github/workflows/upload-all-mini.yml"
+    "upload_secrets_weixin": [
+      "WX_PRIVATE_KEY_PATH_WEIXIN",
+      "WX_PRIVATE_KEY_WEIXIN_BASE64",
+      "WX_PRIVATE_KEY_WEIXIN"
     ]
   },
-  "bootstrap_steps": [
-    "Read AGENTS.md",
-    "Read README.md",
-    "Read TESTING_POLICY.md",
-    "Install dependencies",
-    "Run type-check",
-    "Run lint"
+  "workflows": [
+    ".github/workflows/mini-build.yml",
+    ".github/workflows/upload-weixin.yml",
+    ".github/workflows/upload-all-mini.yml"
   ],
-  "testing_policy": {
-    "unit_framework": "vitest",
-    "e2e_framework": "playwright",
-    "mandatory": true,
-    "rules": [
-      "Every component/page change must include tests",
-      "Component changes require unit tests",
-      "Page changes require unit + e2e tests"
-    ],
-    "files": ["TESTING_POLICY.md", "vitest.config.ts", "playwright.config.ts"]
-  },
-  "last_updated": "2026-03-23"
+  "references": [
+    "AGENTS.md",
+    "README.md",
+    "TESTING_POLICY.md"
+  ],
+  "last_updated": "2026-04-27"
 }

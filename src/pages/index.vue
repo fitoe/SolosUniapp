@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
-import { useHomePlaygroundStore } from '@/stores/home-playground'
-
 definePage({
   type: 'home',
   style: {
@@ -16,6 +12,29 @@ const { count, enabled, note } = storeToRefs(playground)
 const statusText = computed(() => enabled.value ? '已开启' : '已暂停')
 const noteSummary = computed(() => note.value.trim() || '尚未填写摘要')
 
+const capabilityCards = [
+  {
+    title: 'UnoCSS',
+    tag: 'Style',
+    description: '布局、间距、排版和常见视觉修饰优先走内置 utility，保持页面开发节奏。',
+  },
+  {
+    title: '自动引入',
+    tag: 'DX',
+    description: '页面和组件开发时，大多数常用 API 与组件都不需要手动补 import。',
+  },
+  {
+    title: 'Pinia 持久化',
+    tag: 'State',
+    description: '首页状态可以直接验证持久化效果，方便确认基础状态管理链路可用。',
+  },
+  {
+    title: 'Wot 组件',
+    tag: 'UI',
+    description: '组件外观优先通过 props 配置，适合在真实业务页面中直接继续扩展。',
+  },
+] as const
+
 function handleNoteInput(event: any) {
   const detailValue = event?.detail?.value
   const targetValue = event?.target?.value
@@ -25,14 +44,17 @@ function handleNoteInput(event: any) {
 
 <template>
   <view class="page px-4 py-6">
-    <view class="hero rounded-4xl border border-white/70 bg-white/86 p-6 shadow-[0_24rpx_80rpx_rgba(38,76,168,0.12)] backdrop-blur-sm">
-      <view class="flex flex-wrap items-center gap-3">
-        <text class="hero-badge">Playground</text>
-        <text class="rounded-full bg-sky-50 px-3 py-1 text-xs text-sky-700 font-semibold">H5 + mp-weixin</text>
-        <text class="rounded-full bg-emerald-50 px-3 py-1 text-xs text-emerald-700 font-semibold">Smoke Test</text>
+    <view class="hero rounded-4xl border border-white/70 bg-white/86 p-6 backdrop-blur-sm">
+      <view class="hero-top">
+        <text class="hero-badge">Starter</text>
+        <text class="hero-platform">H5 + mp-weixin</text>
       </view>
-      <text class="hero-title mt-4">SolosUniapp 能力面板</text>
-      <text class="hero-desc mt-3">一个首页同时验证 UnoCSS、Iconify、Pinia 持久化和 Wot 组件是否正常可用。</text>
+
+      <text class="hero-title mt-4">SolosUniapp 起步首页</text>
+      <text class="hero-desc mt-3">
+        一个更适合继续开发的起步页：保留基础工程能力展示，同时把首页结构收敛成更清晰的业务骨架。
+      </text>
+
       <view class="hero-meta mt-5">
         <text class="hero-chip">Vue 3</text>
         <text class="hero-chip">UnoCSS</text>
@@ -41,53 +63,68 @@ function handleNoteInput(event: any) {
       </view>
     </view>
 
-    <view class="grid gap-4 pt-5">
+    <view class="section-grid pt-5">
       <view class="panel">
         <view class="panel-head">
-          <text class="panel-title">UnoCSS 样式验证</text>
-          <text class="panel-tag">Utilities</text>
+          <text class="panel-title">开箱能力</text>
+          <text class="panel-tag">Overview</text>
         </view>
-        <view class="rounded-3xl from-sky-500 via-cyan-400 to-emerald-400 bg-gradient-to-r p-4 text-white shadow-lg">
-          <text class="block text-sm opacity-90">渐变、阴影、圆角、间距、原子类布局都应正常生效。</text>
-          <view class="mt-3 flex flex-wrap gap-2">
-            <text class="rounded-full bg-white/20 px-3 py-1 text-xs font-medium">rounded-3xl</text>
-            <text class="rounded-full bg-white/20 px-3 py-1 text-xs font-medium">shadow-lg</text>
-            <text class="rounded-full bg-white/20 px-3 py-1 text-xs font-medium">bg-gradient-to-r</text>
+
+        <view class="capability-grid">
+          <view
+            v-for="card in capabilityCards"
+            :key="card.title"
+            class="capability-card"
+          >
+            <view class="capability-head">
+              <text class="capability-title">{{ card.title }}</text>
+              <text class="capability-tag">{{ card.tag }}</text>
+            </view>
+            <text class="capability-copy">{{ card.description }}</text>
           </view>
         </view>
       </view>
 
       <view class="panel">
         <view class="panel-head">
-          <text class="panel-title">Iconify 图标验证</text>
-          <text class="panel-tag">Icons</text>
+          <text class="panel-title">样式与图标</text>
+          <text class="panel-tag">UI</text>
         </view>
-        <view class="flex flex-wrap gap-3">
-          <view class="icon-card">
-            <view class="i-carbon-color-palette icon-token text-sky-600" />
-            <text class="icon-label">Carbon</text>
-          </view>
-          <view class="icon-card">
-            <view class="i-carbon-cloud-service-management icon-token text-violet-600" />
-            <text class="icon-label">Cloud</text>
-          </view>
-          <view class="icon-card">
-            <view class="i-mdi-lightning-bolt-circle icon-token text-amber-500" />
-            <text class="icon-label">MDI</text>
-          </view>
-          <view class="icon-card">
-            <view class="i-mdi-check-decagram icon-token text-emerald-500" />
-            <text class="icon-label">State</text>
+
+        <view class="showcase-card">
+          <text class="showcase-copy">
+            这里同时验证 UnoCSS 的渐变、阴影、圆角、排版，以及 Iconify 图标渲染是否正常。
+          </text>
+
+          <view class="showcase-icons">
+            <view class="icon-card">
+              <view class="icon-token i-carbon-color-palette text-sky-600" />
+              <text class="icon-label">Palette</text>
+            </view>
+            <view class="icon-card">
+              <view class="icon-token i-carbon-cloud-service-management text-violet-600" />
+              <text class="icon-label">Cloud</text>
+            </view>
+            <view class="icon-card">
+              <view class="icon-token i-mdi-lightning-bolt-circle text-amber-500" />
+              <text class="icon-label">Action</text>
+            </view>
+            <view class="icon-card">
+              <view class="icon-token i-mdi-check-decagram text-emerald-500" />
+              <text class="icon-label">Ready</text>
+            </view>
           </view>
         </view>
       </view>
 
       <view class="panel">
         <view class="panel-head">
-          <text class="panel-title">Pinia 状态验证</text>
-          <text class="panel-tag">Persist</text>
+          <text class="panel-title">状态与交互</text>
+          <text class="panel-tag">Pinia</text>
         </view>
+
         <text class="panel-copy">刷新 H5 页面后，计数、状态和备注应继续保留。</text>
+
         <view class="stats-grid">
           <view class="stat-card">
             <text class="stat-label">当前计数</text>
@@ -98,11 +135,13 @@ function handleNoteInput(event: any) {
             <text class="stat-value" data-testid="status-value">{{ statusText }}</text>
           </view>
         </view>
+
         <view class="action-row">
           <wd-button type="primary" size="small" @click="playground.increment">+1 计数</wd-button>
           <wd-button size="small" plain @click="playground.decrement">-1 计数</wd-button>
           <wd-button type="success" size="small" @click="playground.toggleEnabled">切换状态</wd-button>
         </view>
+
         <view class="note-box">
           <text class="note-label">备注输入</text>
           <input
@@ -120,11 +159,13 @@ function handleNoteInput(event: any) {
           <text class="panel-title">Wot 组件验证</text>
           <text class="panel-tag">wot-design-uni</text>
         </view>
+
         <view class="wot-preview">
           <wd-tag type="primary">Wot 已加载</wd-tag>
           <wd-tag :type="enabled ? 'success' : 'warning'">{{ statusText }}</wd-tag>
           <wd-tag type="primary">Count {{ count }}</wd-tag>
         </view>
+
         <view class="action-row">
           <wd-button block type="warning" @click="playground.setNote('Wot button clicked')">Wot 设置摘要</wd-button>
           <wd-button hairline block @click="playground.reset">重置状态</wd-button>
@@ -147,6 +188,14 @@ function handleNoteInput(event: any) {
   display: flex;
   flex-direction: column;
   gap: 20rpx;
+  box-shadow: 0 24rpx 80rpx rgb(38 76 168 / 12%);
+}
+
+.hero-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14rpx;
 }
 
 .hero-badge {
@@ -157,6 +206,15 @@ function handleNoteInput(event: any) {
   color: #fff;
   font-size: 22rpx;
   letter-spacing: 2rpx;
+}
+
+.hero-platform {
+  padding: 10rpx 18rpx;
+  border-radius: 999rpx;
+  background: #edf5ff;
+  color: #1d4ed8;
+  font-size: 22rpx;
+  font-weight: 600;
 }
 
 .hero-title {
@@ -183,6 +241,11 @@ function handleNoteInput(event: any) {
   background: #edf3ff;
   color: #3158a6;
   font-size: 24rpx;
+}
+
+.section-grid {
+  display: grid;
+  gap: 32rpx;
 }
 
 .panel {
@@ -223,6 +286,71 @@ function handleNoteInput(event: any) {
   color: #5b6785;
 }
 
+.capability-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20rpx;
+}
+
+.capability-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+  border-radius: 24rpx;
+  background: #f8fbff;
+  padding: 24rpx;
+}
+
+.capability-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.capability-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #102347;
+}
+
+.capability-tag {
+  padding: 8rpx 16rpx;
+  border-radius: 999rpx;
+  background: #e6f1ff;
+  color: #3158a6;
+  font-size: 20rpx;
+}
+
+.capability-copy {
+  font-size: 24rpx;
+  line-height: 1.6;
+  color: #586987;
+}
+
+.showcase-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  border-radius: 24rpx;
+  background: linear-gradient(90deg, #0ea5e9 0%, #22d3ee 50%, #34d399 100%);
+  padding: 24rpx;
+  color: #fff;
+  box-shadow: 0 16rpx 40rpx rgb(14 165 233 / 20%);
+}
+
+.showcase-copy {
+  font-size: 26rpx;
+  line-height: 1.7;
+  opacity: 0.94;
+}
+
+.showcase-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
 .icon-card {
   display: flex;
   min-width: 140rpx;
@@ -231,7 +359,7 @@ function handleNoteInput(event: any) {
   align-items: center;
   gap: 14rpx;
   border-radius: 24rpx;
-  background: #f8fbff;
+  background: rgb(255 255 255 / 16%);
   padding: 24rpx 18rpx;
 }
 
@@ -241,7 +369,7 @@ function handleNoteInput(event: any) {
 
 .icon-label {
   font-size: 24rpx;
-  color: #415276;
+  color: #fff;
 }
 
 .stats-grid {
