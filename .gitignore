@@ -8,7 +8,6 @@ tmp-*.log
 auto-imports.d.ts
 components.d.ts
 uni-pages.d.ts
-src/pages.json
 
 .env*
 !.env.example

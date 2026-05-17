@@ -32,6 +32,27 @@
 - `h5`
 - `mp-weixin`
 
+## H5 路由与原生 TabBar 发布注意
+
+本模板使用 `@uni-helper/vite-plugin-uni-pages` 从 `pages.config.ts` 和页面 `definePage` 生成 `src/pages.json`。
+
+`src/pages.json` 必须作为模板源文件保留并提交到 Git，不能放回 `.gitignore`。原因是 H5 的原生 `tabBar` 运行时代码依赖构建时可读到完整 `pages.json`：
+
+- 本地开发/手动上传时，工作区里常常残留 `src/pages.json`，所以 TabBar 看起来正常；
+- Cloudflare Pages、GitHub Actions 等 clean checkout 自动构建只会拿 Git 中已提交的文件；
+- 如果 `src/pages.json` 被忽略未提交，自动构建产物可能只保留 TabBar 文案配置，却缺少真正的 `uni-tabbar` runtime，导致发布后底部 TabBar 不显示。
+
+涉及 H5 原生 TabBar、页面路由、`pages.config.ts`、`definePage` 或 uni-pages 插件配置时，发布前至少检查：
+
+```bash
+git ls-files src/pages.json
+git check-ignore -v src/pages.json || true
+pnpm build:h5
+grep -R "uni-tabbar" dist/build/h5/assets/*.js
+```
+
+如果自动构建发布后 TabBar 消失，优先比较本地和线上入口 JS bundle 是否都包含 `uni-tabbar`，不要先从 CSS 遮挡或页面实现小修入手。
+
 ## 快速开始
 
 1. 安装依赖

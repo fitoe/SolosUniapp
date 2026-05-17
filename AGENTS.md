@@ -26,6 +26,13 @@
 - 修改页面或组件时，优先遵循现有自动引入方式，不要无必要补手动 import。
 - 对于 `computed`、`ref`、`defineStore`、常用 `uni-app` 生命周期、已注册组件等，默认先假设自动引入可用，不要因为个人习惯补手动 import。
 
+H5 路由 / 原生 TabBar 约定：
+
+- `src/pages.json` 是 uni-pages 生成但必须提交的模板源文件，不得加入 `.gitignore`。
+- 原因：Cloudflare Pages / GitHub Actions 等 clean checkout 构建只读取 Git 中的文件；如果 `src/pages.json` 未提交，本地构建可能正常，但自动构建的 H5 包可能缺少 `uni-tabbar` runtime，导致发布后原生 TabBar 不显示。
+- 修改 `pages.config.ts`、页面 `definePage`、TabBar 或 uni-pages 插件配置后，应重新生成/检查 `src/pages.json`，并确认 `git ls-files src/pages.json` 有输出。
+- 发布前如涉及 H5 TabBar，至少执行 `pnpm build:h5` 并检查 `dist/build/h5/assets/*.js` 中包含 `uni-tabbar`；线上异常时优先比对本地/线上 bundle marker，而不是先做 CSS 小修。
+
 样式约定：
 
 - 项目已接入 `UnoCSS`，默认优先使用其能力处理布局、间距、对齐、尺寸、常见文本样式和一次性视觉修饰。
