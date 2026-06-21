@@ -6,12 +6,15 @@
 // biome-ignore lint: disable
 export {}
 declare global {
+  const BusinessError: typeof import('./core/request/business').BusinessError
   const EffectScope: typeof import('vue').EffectScope
   const HttpStatusError: typeof import('./core/request/alova').HttpStatusError
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
   const alovaInstance: typeof import('./core/request/alova').alovaInstance
+  const canOpenRoute: typeof import('./core/router/auth-guard').canOpenRoute
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
+  const createDemoSession: typeof import('./core/auth/service').createDemoSession
   const createPinia: typeof import('pinia').createPinia
   const customRef: typeof import('vue').customRef
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
@@ -27,11 +30,15 @@ declare global {
   const h: typeof import('vue').h
   const http: typeof import('./core/request/http').http
   const inject: typeof import('vue').inject
+  const installRouteGuard: typeof import('./core/router/auth-guard').installRouteGuard
+  const isBusinessSuccess: typeof import('./core/request/business').isBusinessSuccess
+  const isProtectedRoute: typeof import('./core/router/auth-guard').isProtectedRoute
   const isProxy: typeof import('vue').isProxy
   const isReactive: typeof import('vue').isReactive
   const isReadonly: typeof import('vue').isReadonly
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
+  const loginWithDemoAccount: typeof import('./core/auth/service').loginWithDemoAccount
   const mapActions: typeof import('pinia').mapActions
   const mapGetters: typeof import('pinia').mapGetters
   const mapState: typeof import('pinia').mapState
@@ -103,6 +110,7 @@ declare global {
   const tryOnUnload: typeof import('@uni-helper/uni-use').tryOnUnload
   const tryParseJson: typeof import('@uni-helper/uni-use').tryParseJson
   const unref: typeof import('vue').unref
+  const unwrapBusinessResponse: typeof import('./core/request/business').unwrapBusinessResponse
   const uploadAlovaInstance: typeof import('./core/request/alova').uploadAlovaInstance
   const useActionSheet: typeof import('@uni-helper/uni-use').useActionSheet
   const useAttrs: typeof import('vue').useAttrs
@@ -155,8 +163,14 @@ declare global {
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
   // @ts-ignore
+  export type { AuthUser, AuthSession } from './core/auth/store'
+  import('./core/auth/store')
+  // @ts-ignore
   export type { HttpStatusError } from './core/request/alova'
   import('./core/request/alova')
+  // @ts-ignore
+  export type { BusinessError, BusinessResponse } from './core/request/business'
+  import('./core/request/business')
 }
 
 // for vue template auto import
@@ -164,12 +178,15 @@ import { UnwrapRef } from 'vue'
 declare module 'vue' {
   interface GlobalComponents {}
   interface ComponentCustomProperties {
+    readonly BusinessError: UnwrapRef<typeof import('./core/request/business')['BusinessError']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly HttpStatusError: UnwrapRef<typeof import('./core/request/alova')['HttpStatusError']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
     readonly alovaInstance: UnwrapRef<typeof import('./core/request/alova')['alovaInstance']>
+    readonly canOpenRoute: UnwrapRef<typeof import('./core/router/auth-guard')['canOpenRoute']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
+    readonly createDemoSession: UnwrapRef<typeof import('./core/auth/service')['createDemoSession']>
     readonly createPinia: UnwrapRef<typeof import('pinia')['createPinia']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>
@@ -184,11 +201,15 @@ declare module 'vue' {
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly http: UnwrapRef<typeof import('./core/request/http')['http']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
+    readonly installRouteGuard: UnwrapRef<typeof import('./core/router/auth-guard')['installRouteGuard']>
+    readonly isBusinessSuccess: UnwrapRef<typeof import('./core/request/business')['isBusinessSuccess']>
+    readonly isProtectedRoute: UnwrapRef<typeof import('./core/router/auth-guard')['isProtectedRoute']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
     readonly isReactive: UnwrapRef<typeof import('vue')['isReactive']>
     readonly isReadonly: UnwrapRef<typeof import('vue')['isReadonly']>
     readonly isRef: UnwrapRef<typeof import('vue')['isRef']>
     readonly isShallow: UnwrapRef<typeof import('vue')['isShallow']>
+    readonly loginWithDemoAccount: UnwrapRef<typeof import('./core/auth/service')['loginWithDemoAccount']>
     readonly mapActions: UnwrapRef<typeof import('pinia')['mapActions']>
     readonly mapGetters: UnwrapRef<typeof import('pinia')['mapGetters']>
     readonly mapState: UnwrapRef<typeof import('pinia')['mapState']>
@@ -260,6 +281,7 @@ declare module 'vue' {
     readonly tryOnUnload: UnwrapRef<typeof import('@uni-helper/uni-use')['tryOnUnload']>
     readonly tryParseJson: UnwrapRef<typeof import('@uni-helper/uni-use')['tryParseJson']>
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
+    readonly unwrapBusinessResponse: UnwrapRef<typeof import('./core/request/business')['unwrapBusinessResponse']>
     readonly uploadAlovaInstance: UnwrapRef<typeof import('./core/request/alova')['uploadAlovaInstance']>
     readonly useActionSheet: UnwrapRef<typeof import('@uni-helper/uni-use')['useActionSheet']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>

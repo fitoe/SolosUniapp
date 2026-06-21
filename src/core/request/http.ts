@@ -1,4 +1,6 @@
+import type { BusinessResponse } from './business'
 import { alovaInstance, uploadAlovaInstance } from './alova'
+import { unwrapBusinessResponse } from './business'
 
 type HttpPayload = Record<string, unknown>
 
@@ -22,5 +24,13 @@ export const http = {
   },
   upload<T>(data?: HttpPayload) {
     return uploadAlovaInstance.Post<T>('', data, baseConfig)
+  },
+  async getBusiness<T>(url: string, params?: Record<string, unknown>) {
+    const response = await alovaInstance.Get<BusinessResponse<T>>(url, { params, ...baseConfig })
+    return unwrapBusinessResponse(response)
+  },
+  async postBusiness<T>(url: string, data?: HttpPayload) {
+    const response = await alovaInstance.Post<BusinessResponse<T>>(url, data, baseConfig)
+    return unwrapBusinessResponse(response)
   },
 }
