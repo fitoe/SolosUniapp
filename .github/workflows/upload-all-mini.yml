@@ -35,7 +35,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.10.0
+          version: 10.11.1
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -45,6 +45,12 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm type-check
+
+      - name: Lint
+        run: pnpm lint
 
       - name: Upload weixin via alias command
         shell: bash

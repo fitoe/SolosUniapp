@@ -1,4 +1,4 @@
-name: Mini Build Matrix
+name: H5 Build
 
 on:
   workflow_dispatch:
@@ -8,22 +8,14 @@ on:
       - master
 
 jobs:
-  build-mini-target:
-    name: Build ${{ matrix.target }}
+  build-h5:
+    name: Build h5
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - target: mp-weixin
-            cmd: pnpm build:mp-weixin
     env:
       VITE_API_HOST: ${{ secrets.VITE_API_HOST }}
       VITE_API_PATH: ${{ secrets.VITE_API_PATH }}
       VITE_UPLOAD_HOST: ${{ secrets.VITE_UPLOAD_HOST }}
       VITE_UPLOAD_PATH: ${{ secrets.VITE_UPLOAD_PATH }}
-      VITE_APPID_WEIXIN: ${{ secrets.VITE_APPID_WEIXIN }}
-      VITE_PROJECT_NAME_WEIXIN: ${{ secrets.VITE_PROJECT_NAME_WEIXIN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,12 +40,12 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Build target
-        run: ${{ matrix.cmd }}
+      - name: Build H5
+        run: pnpm build:h5
 
-      - name: Upload target artifact
+      - name: Upload H5 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dist-${{ matrix.target }}
-          path: dist/build/
+          name: dist-h5
+          path: dist/build/h5/
           if-no-files-found: error

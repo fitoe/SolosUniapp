@@ -6,6 +6,7 @@ coverage/
 tmp-*.log
 
 auto-imports.d.ts
+!src/auto-imports.d.ts
 components.d.ts
 uni-pages.d.ts
 

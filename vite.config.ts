@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { fileURLToPath, URL } from 'node:url'
 import Uni from '@uni-helper/plugin-uni'
 import { uniuseAutoImports } from '@uni-helper/uni-use'
@@ -9,6 +10,7 @@ import UnoCSS from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import { defineConfig, loadEnv } from 'vite'
 import uniPolyfill from 'vite-plugin-uni-polyfill'
+import { resolveTargetFromLifecycle } from './config/targets-resolver'
 
 function toVitePath(url: string) {
   return fileURLToPath(new URL(url, import.meta.url)).replace(/\\/g, '/')
@@ -18,9 +20,13 @@ export default ({ mode }: { mode: string }) => {
   const envDir = toVitePath('./env')
   const srcDir = toVitePath('./src')
   const wotDir = toVitePath('./node_modules/wot-design-uni')
+  const targetInfo = resolveTargetFromLifecycle(process.env.npm_lifecycle_event || '')
+  const targetEnv = targetInfo.target === 'mp-weixin'
+    ? loadEnv(targetInfo.config.mode, envDir)
+    : {}
   const env = {
+    ...targetEnv,
     ...loadEnv(mode, envDir),
-    ...loadEnv('wechat', envDir),
   }
   const uniUseImports = Object.fromEntries(
     Object.entries(uniuseAutoImports()).map(([pkg, imports]) => [
@@ -92,7 +98,7 @@ export default ({ mode }: { mode: string }) => {
             ],
           },
         ],
-        dts: true,
+        dts: 'src/auto-imports.d.ts',
         dirsScanOptions: {
           types: true,
         },

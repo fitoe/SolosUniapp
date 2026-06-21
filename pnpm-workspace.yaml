@@ -1,3 +1,6 @@
+shellEmulator: true
+trustPolicy: no-downgrade
+
 onlyBuiltDependencies:
   - '@swc/core'
   - '@uni-helper/unocss-preset-uni'

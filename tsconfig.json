@@ -26,7 +26,6 @@
     "src/**/*.vue",
     "config/**/*.ts",
     "scripts/**/*.ts",
-    "./auto-imports.d.ts",
     "vite.config.ts",
     "pages.config.ts",
     "manifest.config.ts",
