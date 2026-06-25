@@ -28,6 +28,7 @@
     "@dcloudio/uni-components": "3.0.0-4080720251210001",
     "@dcloudio/uni-h5": "3.0.0-4080720251210001",
     "@dcloudio/uni-mp-weixin": "3.0.0-4080720251210001",
+    "@qiun/ucharts": "2.5.0-20230101",
     "@vueuse/core": "^13.9.0",
     "@vueuse/shared": "^13.9.0",
     "alova": "^3.5.0",
@@ -80,7 +81,8 @@
     "ui_library": "wot-design-uni",
     "request_library": "alova",
     "features": [
-      "home-playground"
+      "home-playground",
+      "chart"
     ]
   }
 }

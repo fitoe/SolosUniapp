@@ -8,4 +8,10 @@ export default uniHelper({
     'vue/singleline-html-element-content-newline': 'off',
     'vue/multiline-html-element-content-newline': 'off',
   },
+}).prepend({
+  ignores: [
+    'src/components/qiun-data-charts/**',
+    'src/components/qiun-error/**',
+    'src/components/qiun-loading/**',
+  ],
 })

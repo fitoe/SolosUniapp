@@ -26,6 +26,9 @@ importers:
       '@dcloudio/uni-mp-weixin':
         specifier: 3.0.0-4080720251210001
         version: 3.0.0-4080720251210001(@vueuse/core@13.9.0(vue@3.5.30(typescript@5.9.3)))(postcss@8.5.8)(rollup@4.60.0)(vue@3.5.30(typescript@5.9.3))
+      '@qiun/ucharts':
+        specifier: 2.5.0-20230101
+        version: 2.5.0-20230101
       '@vueuse/core':
         specifier: ^13.9.0
         version: 13.9.0(vue@3.5.30(typescript@5.9.3))
@@ -2615,6 +2618,9 @@ packages:
 
   '@protobufjs/utf8@1.1.0':
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
+
+  '@qiun/ucharts@2.5.0-20230101':
+    resolution: {integrity: sha512-C7ccBgfPuGF6dxTRuMW0NPPMSCf1k/kh3I9zkRVBc5PaivudX/rPL+jd2Wty6gn5ya5L3Ob+YmYe09V5xw66Cw==}
 
   '@quansync/fs@1.0.0':
     resolution: {integrity: sha512-4TJ3DFtlf1L5LDMaM6CanJ/0lckGNtJcMjQ1NAV6zDmA0tEHKZtxNKin8EgPaVX1YzljbxckyT2tJrpQKAtngQ==}
@@ -12647,6 +12653,8 @@ snapshots:
   '@protobufjs/pool@1.1.0': {}
 
   '@protobufjs/utf8@1.1.0': {}
+
+  '@qiun/ucharts@2.5.0-20230101': {}
 
   '@quansync/fs@1.0.0':
     dependencies:

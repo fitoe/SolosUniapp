@@ -22,6 +22,18 @@ export default defineUniPages({
         name: '首页',
         path: '/pages/index',
       },
+      {
+        name: '图表',
+        path: '/pages/chart/index',
+      },
+      {
+        name: '登录',
+        path: '/pages/login',
+      },
+      {
+        name: '我的',
+        path: '/pages/mine',
+      },
     ],
   },
 })
