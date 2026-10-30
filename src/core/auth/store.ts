@@ -54,6 +54,14 @@ export const useAuthStore = defineStore(
       expiresAt.value = null
     }
 
+    // Time is not reactive: check it at access boundaries, not only in a computed value.
+    function hasValidSession() {
+      if (expiresAt.value !== null && expiresAt.value <= Date.now()) {
+        logout()
+      }
+      return token.value.length > 0
+    }
+
     return {
       token,
       userId,
@@ -65,6 +73,7 @@ export const useAuthStore = defineStore(
       setToken,
       setUserId,
       logout,
+      hasValidSession,
     }
   },
   {

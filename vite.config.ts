@@ -99,6 +99,7 @@ export default ({ mode }: { mode: string }) => {
           },
         ],
         dts: 'src/auto-imports.d.ts',
+        dtsMode: 'overwrite',
         dirsScanOptions: {
           types: true,
         },

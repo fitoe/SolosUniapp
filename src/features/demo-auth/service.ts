@@ -1,4 +1,5 @@
-import type { AuthSession } from './store'
+import type { AuthSession } from '@/core/auth/store'
+import { useAuthStore } from '@/core/auth/store'
 import { loginByProvider } from '@/platform/auth'
 
 export async function createDemoSession(): Promise<AuthSession> {

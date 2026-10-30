@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { loginWithDemoAccount } from '@/core/auth/service'
+import { loginWithDemoAccount } from '@/features/demo-auth/service'
 
 definePage({
   style: {

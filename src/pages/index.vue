@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useHomePlaygroundStore } from '@/features/playground/store'
+
 definePage({
   type: 'home',
   style: {
@@ -34,6 +36,7 @@ function handleNoteInput(event: any) {
     </view>
 
     <view class="section-grid">
+      <navigator url="/pages/examples/index">查看列表与详情示例 →</navigator>
       <view class="panel">
         <view class="panel-head compact">
           <text class="panel-title">基础能力</text>

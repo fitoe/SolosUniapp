@@ -51,7 +51,7 @@ function createUniAlova(baseURL: string) {
     },
     async beforeRequest(method) {
       const authStore = useAuthStore()
-      if (authStore.token) {
+      if (authStore.hasValidSession()) {
         method.config.headers = {
           ...(method.config.headers || {}),
           Authorization: `Bearer ${authStore.token}`,

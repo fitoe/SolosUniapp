@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils'
 import { createPinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { useHomePlaygroundStore } from '@/features/playground/store'
 import IndexPage from '@/pages/index.vue'
-import { useHomePlaygroundStore } from '@/stores/home-playground'
 
 function mountIndexPage() {
   const pinia = createPinia()
@@ -10,6 +10,7 @@ function mountIndexPage() {
     global: {
       plugins: [pinia],
       stubs: {
+        'navigator': true,
         'wd-button': {
           emits: ['click'],
           template: '<button @click="$emit(\'click\')"><slot /></button>',

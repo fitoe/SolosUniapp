@@ -1,5 +1,24 @@
 # SolosUniapp
 
+## 基于模板开始新项目
+
+1. 确认目标平台、页面和接口契约，参考 `env/.env.example` 和 `env/.env.wechat.example` 配置本地环境。不要提交真实凭证。
+2. 在 `manifest.config.ts`、`pages.config.ts` 和页面的 `definePage` 中调整应用信息与路由。修改路由后检查生成的 `src/pages.json` 并提交它。
+3. 从 `src/pages/index.vue`、`src/pages/mine.vue` 和 `src/pages/chart/index.vue` 的示例出发，按业务替换页面；请求入口在 `src/core/request/`。`src/features/` 存放示例状态、登录与本地列表数据，`src/pages/examples/` 展示列表、详情及加载、空数据、错误状态；它们可随对应页面一起替换或删除。
+4. **示例登录不是生产鉴权**：`src/features/demo-auth/service.ts` 生成演示会话。上线前必须对接服务端登录、令牌校验和权限控制，前端路由守卫不能代替服务端权限检查。列表数据同样是本地演示，不会访问后端。
+5. 按改动风险运行 `pnpm check` 和相关测试；涉及平台构建链时顺序运行 `pnpm build:h5`、`pnpm build:mp-weixin`，避免生成文件写入冲突。
+
+### 给 AI 的任务说明
+
+先让 AI 阅读 `AGENTS.md`、本节和相关代码，再提供业务目标、目标平台、接口契约、验收条件以及不能修改的范围。对于新页面，说明加载、空数据、失败和权限状态；对于接口，提供字段、错误码和认证方式。要求 AI 说明实际修改与验证结果，避免把示例数据或演示登录当作真实业务实现。
+
+```text
+基于本仓库实现 [业务目标]，目标平台是 [H5/微信小程序]。
+接口契约：[地址、字段、认证和错误处理]。
+验收条件：[主要流程、空/错误状态]。
+请遵循 AGENTS.md，先检查现有实现，完成后报告修改和验证结果。
+```
+
 `SolosUniapp` 是一个面向 `H5 + 微信小程序` 的 `uni-app` 起步项目。
 
 它适合用来快速开始一个新业务项目：基础结构已经准备好，常用工程能力也已经接入，你可以把注意力更多放在页面、接口和业务流程本身，而不是重复搭建脚手架。
@@ -34,7 +53,7 @@
 
 ## H5 路由与原生 TabBar 发布注意
 
-本模板使用 `@uni-helper/vite-plugin-uni-pages` 从 `pages.config.ts` 和页面 `definePage` 生成 `src/pages.json`。
+本模板使用 `@uni-helper/vite-plugin-uni-pages` 从 `pages.config.ts` 和页面 `definePage` 生成 `src/pages.json`。当前模板没有配置原生 TabBar；以下检查适用于后续添加 TabBar 的项目。
 
 `src/pages.json` 必须作为模板源文件保留并提交到 Git，不能放回 `.gitignore`。原因是 H5 的原生 `tabBar` 运行时代码依赖构建时可读到完整 `pages.json`：
 
@@ -141,7 +160,7 @@ pnpm upload:mp
 仓库内已提供微信开发者工具自动化调试脚本，适合做页面检查、截图和简单冒烟验证。
 
 这组能力默认面向 AI / Agent 使用。
-正常开发时，不需要人主动执行这些调试命令；当任务需要连接微信开发者工具、读取页面状态、截图或执行小程序冒烟验证时，AI 应自动启用。
+只有用户在当前轮明确要求操作微信开发者工具时，AI 才可启动或连接它。仅询问意外启动的原因时，只进行只读系统诊断。
 
 使用前提：
 
@@ -149,7 +168,7 @@ pnpm upload:mp
 2. 微信开发者工具已打开 `dist/dev/mp-weixin`
 3. “设置 -> 安全设置” 已开启服务端口
 
-AI / Agent 需要时可自动调用：
+获得上述明确要求后，AI / Agent 可调用：
 
 ```bash
 pnpm debug:mp:enable
@@ -185,6 +204,12 @@ pnpm test:mp:smoke
 
 ## 依赖兼容说明
 
+uni-app 核心包需要保持同一版本，当前使用 Vue 3 发布通道的 `3.0.0-5030420261029001`；该版本的 Vite 插件要求 `vite@5.2.8`。不要单独升级其中一个核心包或直接按 npm 的 `latest` 标签选择 uni-app 版本。升级时应先检查对应 `vue3` 标签及其 peer 依赖，并顺序验证两个目标的构建。
+
+Vue 和 VueUse 分别固定到与 uni-app 编译器匹配的 3.4.21、11.3.0。`pnpm-workspace.yaml` 将 lint 插件固定到兼容 TypeScript 5 的版本，并将微信上传工具使用的 Babel ESLint 解析器更新到支持 ESLint 9 的版本。升级相应上游依赖时应复查并移除不再需要的覆盖。
+
+仍有一个开发工具 peer 警告：UnoCSS 0.65.4 的 inspector 间接依赖 `vue-flow-layout`，要求 Vue 3.4.37 以上，与 uni-app 固定的 Vue 3.4.21 不一致。构建与测试通过不代表 inspector 本身已验证；升级 UnoCSS 兼容组时应重新检查。
+
 微信小程序样式链路目前固定了一组 `UnoCSS` 兼容版本，用来避免 `mp-weixin` 构建后样式异常。
 
 当前固定版本：
@@ -204,6 +229,7 @@ pnpm test:mp:smoke
 ## 目录结构
 
 - `src/`：业务源码
+- `src/features/`：按能力组织的示例模块，作为新业务的参考而非生产实现
 - `config/`：平台目标与环境解析
 - `scripts/`：构建、调试、上传脚本
 - `tests/`：Vitest、Playwright、小程序冒烟测试
@@ -229,6 +255,10 @@ pnpm lint
 - `AGENTS.md`
 - `ai-context.json`
 - `TESTING_POLICY.md`
+
+`AGENTS.md` 是 AI 工作规则的唯一来源，`ai-context.json` 只记录项目事实、入口和命令。请求层默认给 API 和上传请求附加有效会话的 Bearer token；对接后端时应根据接口要求调整。`getBusiness` / `postBusiness` 使用示例的 `code` 响应约定，普通请求不强制该格式。
+
+图表示例使用仓库内的 `src/components/qiun-*` 封装与 `@qiun/ucharts`；它是可选示例，移除时需同时删除图表页面、组件、依赖和相应测试。上游来源、版本核对结果及许可证见 `third-party/ucharts/`。
 
 ## 其他说明
 

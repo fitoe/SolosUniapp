@@ -1,11 +1,13 @@
 import { createPinia, setActivePinia } from 'pinia'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useAuthStore } from '@/core/auth/store'
 
 describe('auth store', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
   })
+
+  afterEach(() => vi.useRealTimers())
 
   it('stores a session profile and reports login state', () => {
     const auth = useAuthStore()
@@ -39,6 +41,17 @@ describe('auth store', () => {
     })
 
     expect(auth.isSessionExpired).toBe(true)
+    expect(auth.isLoggedIn).toBe(false)
+  })
+
+  it('rechecks and clears a session that expires while the app is open', () => {
+    vi.useFakeTimers()
+    const auth = useAuthStore()
+    auth.setSession({ token: 'token', user: { id: '1', nickname: 'User' }, expiresAt: Date.now() + 1000 })
+    expect(auth.isLoggedIn).toBe(true)
+    vi.advanceTimersByTime(1001)
+    expect(auth.hasValidSession()).toBe(false)
+    expect(auth.token).toBe('')
     expect(auth.isLoggedIn).toBe(false)
   })
 })

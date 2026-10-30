@@ -10,7 +10,7 @@ const displayName = computed(() => authStore.user?.nickname || '未登录用户'
 const accountId = computed(() => authStore.userId || '-')
 
 onShow(() => {
-  if (!authStore.isLoggedIn) {
+  if (!authStore.hasValidSession()) {
     uni.redirectTo({
       url: '/pages/login?redirect=%2Fpages%2Fmine',
     })

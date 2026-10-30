@@ -33,11 +33,26 @@ describe('route auth guard', () => {
     expect(canOpenRoute('/pages/mine')).toBe(true)
   })
 
+  it('rejects a session that expires after its login state was read', () => {
+    vi.useFakeTimers()
+    try {
+      const auth = useAuthStore()
+      auth.setSession({ token: 'token', user: { id: '1', nickname: 'User' }, expiresAt: Date.now() + 1000 })
+      expect(auth.isLoggedIn).toBe(true)
+      vi.advanceTimersByTime(1001)
+      expect(canOpenRoute('/pages/mine?from=home')).toBe(false)
+    }
+    finally {
+      vi.useRealTimers()
+    }
+  })
+
   it('registers uni navigation interceptors once', () => {
     installRouteGuard()
 
     expect(uni.addInterceptor).toHaveBeenCalledWith('navigateTo', expect.any(Object))
     expect(uni.addInterceptor).toHaveBeenCalledWith('redirectTo', expect.any(Object))
     expect(uni.addInterceptor).toHaveBeenCalledWith('switchTab', expect.any(Object))
+    expect(uni.addInterceptor).toHaveBeenCalledWith('reLaunch', expect.any(Object))
   })
 })

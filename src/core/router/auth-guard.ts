@@ -21,7 +21,7 @@ export function canOpenRoute(url: string) {
   }
 
   const authStore = useAuthStore()
-  return authStore.isLoggedIn
+  return authStore.hasValidSession()
 }
 
 function createInterceptor() {
@@ -33,7 +33,7 @@ function createInterceptor() {
       }
 
       uni.redirectTo({
-        url: `/pages/login?redirect=${encodeURIComponent(normalizeRoute(url))}`,
+        url: `/pages/login?redirect=${encodeURIComponent(url.startsWith('/') ? url : `/${url}`)}`,
       })
       return false
     },
@@ -49,5 +49,6 @@ export function installRouteGuard() {
   uni.addInterceptor('navigateTo', interceptor)
   uni.addInterceptor('redirectTo', interceptor)
   uni.addInterceptor('switchTab', interceptor)
+  uni.addInterceptor('reLaunch', interceptor)
   installed = true
 }
