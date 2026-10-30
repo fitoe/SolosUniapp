@@ -1,6 +1,10 @@
 shellEmulator: true
 trustPolicy: no-downgrade
 
+overrides:
+  '@antfu/eslint-config>@vitest/eslint-plugin': 1.5.0
+  miniprogram-ci>@babel/eslint-parser: 7.28.6
+
 onlyBuiltDependencies:
   - '@swc/core'
   - '@uni-helper/unocss-preset-uni'
